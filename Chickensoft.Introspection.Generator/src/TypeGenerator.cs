@@ -554,6 +554,7 @@ public class TypeGenerator : IIncrementalGenerator {
           IsInit: isInit,
           IsRequired: isRequired,
           IsNullable: isNullable,
+          ExplicitInterfaceName: property.ExplicitInterfaceSpecifier?.Name.ToString(),
           DefaultValueExpression: defaultValueExpression,
           TypeNode: genericType,
           Attributes: propertyAttributes
