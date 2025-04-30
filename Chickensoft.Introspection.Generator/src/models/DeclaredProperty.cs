@@ -24,6 +24,7 @@ public sealed record DeclaredProperty(
   bool IsRequired,
   bool IsNullable,
   string? DefaultValueExpression,
+  string? ExplicitInterfaceName,
   TypeNode TypeNode,
   ImmutableArray<DeclaredAttribute> Attributes
 ) {
@@ -32,21 +33,16 @@ public sealed record DeclaredProperty(
     writer.Indent++;
 
     var propertyValue = "value" + (IsNullable ? "" : "!");
+    var typeName = ExplicitInterfaceName ?? typeSimpleNameClosed;
 
     var getter = HasGetter
-      ? $"static (object obj) => (({typeSimpleNameClosed})obj).{Name}"
+      ? $"static (object obj) => (({typeName})obj).{Name}"
       : "null";
 
     var type = TypeNode.ClosedType;
 
-    var setter = HasSetter
-      ? (
-        IsInit
-          ? "null"
-          : $"static (object obj, object? value) => " +
-            $"(({typeSimpleNameClosed})obj)" +
-            $".{Name} = ({type}){propertyValue}"
-      )
+    var setter = HasSetter && !IsInit
+      ? $"static (object obj, object? value) => (({typeName})obj).{Name} = ({type}){propertyValue}"
       : "null";
 
     writer.WriteLine($"Name: \"{Name}\",");

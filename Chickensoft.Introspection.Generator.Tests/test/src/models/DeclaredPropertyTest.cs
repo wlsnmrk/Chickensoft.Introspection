@@ -16,6 +16,7 @@ public class DeclaredPropertyTest {
       IsRequired: false,
       IsNullable: false,
       DefaultValueExpression: null,
+      ExplicitInterfaceName: null,
       TypeNode: new TypeNode(
         "System.String", false, Children: ImmutableArray<TypeNode>.Empty
       ),
@@ -35,6 +36,7 @@ public class DeclaredPropertyTest {
         IsRequired: false,
         IsNullable: false,
         DefaultValueExpression: null,
+        ExplicitInterfaceName: null,
         TypeNode: new TypeNode(
           "System.String", false, Children: ImmutableArray<TypeNode>.Empty
         ),
@@ -50,6 +52,7 @@ public class DeclaredPropertyTest {
       IsRequired: false,
       IsNullable: false,
       DefaultValueExpression: null,
+      ExplicitInterfaceName: null,
       TypeNode: new TypeNode(
         "System.String", false, Children: ImmutableArray<TypeNode>.Empty
       ),
@@ -65,6 +68,7 @@ public class DeclaredPropertyTest {
         IsRequired: false,
         IsNullable: false,
         DefaultValueExpression: null,
+        ExplicitInterfaceName: null,
         TypeNode: new TypeNode(
           "System.String", false, Children: ImmutableArray<TypeNode>.Empty
         ),
