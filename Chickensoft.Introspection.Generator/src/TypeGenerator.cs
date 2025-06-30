@@ -358,7 +358,7 @@ public class TypeGenerator : IIncrementalGenerator {
   // of the same type that we discover, as well as visibility information about
   // any containing types.
   public static bool IsTypeCandidate(SyntaxNode node, CancellationToken _) =>
-      node is TypeDeclarationSyntax;
+      node is TypeDeclarationSyntax { } type && !IsRef(type);
 
   public static bool IsGlobalUsing(SyntaxNode node, CancellationToken _) =>
     node is UsingDirectiveSyntax @using &&
@@ -420,6 +420,9 @@ public class TypeGenerator : IIncrementalGenerator {
 
   public static bool IsPartial(TypeDeclarationSyntax typeDecl) =>
     typeDecl.Modifiers.Any(SyntaxKind.PartialKeyword);
+
+  public static bool IsRef(TypeDeclarationSyntax typeDecl) =>
+    typeDecl.Modifiers.Any(SyntaxKind.RefKeyword);
 
   public static string? GetBaseType(TypeDeclarationSyntax typeDecl) =>
     typeDecl.BaseList?.Types.First().Type.NormalizeWhitespace().ToString();
