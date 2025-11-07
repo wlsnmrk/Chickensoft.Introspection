@@ -5,7 +5,8 @@ namespace Chickensoft.Introspection;
 /// mixin with the <see cref="MixinAttribute"/>.
 /// </summary>
 /// <typeparam name="TMixin">Type of the mixin.</typeparam>
-public interface IMixin<TMixin> : IIntrospectiveRef {
+public interface IMixin<TMixin> : IIntrospectiveRef
+{
   /// <summary>
   /// Mixin handler method. Types marked with the
   /// <see cref="MetaAttribute"/> have information about their mixins

@@ -2,32 +2,29 @@ namespace Chickensoft.Introspection.Generator.Tests.Models;
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class ScopeTreeTest {
+public class ScopeTreeTest
+{
   private readonly DeclaredType _genericOuter = new(
   Reference: new TypeReference(
     "GenericOuter",
     Construction: Construction.Class,
     IsPartial: false,
-    TypeParameters: new[] { "T" }.ToImmutableArray()
+    TypeParameters: ["T"]
   ),
   SyntaxLocation: Microsoft.CodeAnalysis.Location.None,
-  Location: new TypeLocation(
-    Namespaces: ImmutableArray<string>.Empty,
-    ContainingTypes: ImmutableArray<TypeReference>.Empty
-  ),
+  Location: new TypeLocation(Namespaces: [], ContainingTypes: []),
   BaseType: null,
-  Usings: ImmutableHashSet<UsingDirective>.Empty,
+  Usings: [],
   Kind: DeclaredTypeKind.ConcreteType,
   IsStatic: false,
   IsPublicOrInternal: true,
-  Properties: ImmutableArray<DeclaredProperty>.Empty,
-  Attributes: ImmutableArray<DeclaredAttribute>.Empty,
-  Mixins: ImmutableArray<string>.Empty
+  Properties: [],
+  Attributes: [],
+  Mixins: []
 );
 
   private readonly DeclaredType _outer = new(
@@ -35,29 +32,30 @@ public class ScopeTreeTest {
       "Outer",
       Construction: Construction.Class,
       IsPartial: false,
-      TypeParameters: ImmutableArray<string>.Empty
+      TypeParameters: []
     ),
     SyntaxLocation: Microsoft.CodeAnalysis.Location.None,
     Location: new TypeLocation(
-      Namespaces: ImmutableArray<string>.Empty,
-      ContainingTypes: new[] {
+      Namespaces: [],
+      ContainingTypes:
+      [
         // Nested inside _outer
         new TypeReference(
           "GenericOuter",
           Construction.Class,
           false,
-          new[] { "T" }.ToImmutableArray()
+          ["T"]
         )
-      }.ToImmutableArray()
+      ]
     ),
     BaseType: null,
-    Usings: ImmutableHashSet<UsingDirective>.Empty,
+    Usings: [],
     Kind: DeclaredTypeKind.ConcreteType,
     IsStatic: false,
     IsPublicOrInternal: true,
-    Properties: ImmutableArray<DeclaredProperty>.Empty,
-    Attributes: ImmutableArray<DeclaredAttribute>.Empty,
-    Mixins: ImmutableArray<string>.Empty
+    Properties: [],
+    Attributes: [],
+    Mixins: []
   );
 
   private readonly DeclaredType _inner = new(
@@ -65,35 +63,36 @@ public class ScopeTreeTest {
       "Inner",
       Construction: Construction.Class,
       IsPartial: false,
-      TypeParameters: ImmutableArray<string>.Empty
+      TypeParameters: []
     ),
     SyntaxLocation: Microsoft.CodeAnalysis.Location.None,
     Location: new TypeLocation(
-      Namespaces: ImmutableArray<string>.Empty,
-      ContainingTypes: new[] {
+      Namespaces: [],
+      ContainingTypes:
+      [
         // Nested inside _outer
         new TypeReference(
           "GenericOuter",
           Construction.Class,
           false,
-          TypeParameters: new[] { "T" }.ToImmutableArray()
+          TypeParameters: ["T"]
         ),
         new TypeReference(
           "Outer",
           Construction.Class,
           false,
-          ImmutableArray<string>.Empty
+          []
         )
-      }.ToImmutableArray()
+      ]
     ),
     BaseType: null,
-    Usings: ImmutableHashSet<UsingDirective>.Empty,
+    Usings: [],
     Kind: DeclaredTypeKind.ConcreteType,
     IsStatic: false,
     IsPublicOrInternal: true,
-    Properties: ImmutableArray<DeclaredProperty>.Empty,
-    Attributes: ImmutableArray<DeclaredAttribute>.Empty,
-    Mixins: ImmutableArray<string>.Empty
+    Properties: [],
+    Attributes: [],
+    Mixins: []
   );
 
   private readonly DeclaredType _typeInOtherNs = new(
@@ -101,21 +100,21 @@ public class ScopeTreeTest {
       "OtherType",
       Construction: Construction.Class,
       IsPartial: false,
-      TypeParameters: ImmutableArray<string>.Empty
+      TypeParameters: []
     ),
     SyntaxLocation: Microsoft.CodeAnalysis.Location.None,
     Location: new TypeLocation(
-      Namespaces: ImmutableArray.Create("A", "B", "C"),
-      ContainingTypes: ImmutableArray<TypeReference>.Empty
+      Namespaces: ["A", "B", "C"],
+      ContainingTypes: []
     ),
     BaseType: null,
-    Usings: ImmutableHashSet<UsingDirective>.Empty,
+    Usings: [],
     Kind: DeclaredTypeKind.ConcreteType,
     IsStatic: false,
     IsPublicOrInternal: true,
-    Properties: ImmutableArray<DeclaredProperty>.Empty,
-    Attributes: ImmutableArray<DeclaredAttribute>.Empty,
-    Mixins: ImmutableArray<string>.Empty
+    Properties: [],
+    Attributes: [],
+    Mixins: []
   );
 
   private readonly DeclaredType _typeExtendingTypeInOtherNs = new(
@@ -123,27 +122,26 @@ public class ScopeTreeTest {
       "OtherTypeChild",
       Construction: Construction.Class,
       IsPartial: false,
-      TypeParameters: ImmutableArray<string>.Empty
+      TypeParameters: []
     ),
     SyntaxLocation: Microsoft.CodeAnalysis.Location.None,
-    Location: new TypeLocation(
-      Namespaces: ImmutableArray<string>.Empty,
-      ContainingTypes: ImmutableArray<TypeReference>.Empty
-    ),
+    Location: new TypeLocation(Namespaces: [], ContainingTypes: []),
     BaseType: "OtherType",
-    Usings: ImmutableHashSet.Create(
+    Usings:
+    [
       new UsingDirective(Alias: null, Name: "A.B.C", false, false, false)
-    ),
+    ],
     Kind: DeclaredTypeKind.ConcreteType,
     IsStatic: false,
     IsPublicOrInternal: true,
-    Properties: ImmutableArray<DeclaredProperty>.Empty,
-    Attributes: ImmutableArray<DeclaredAttribute>.Empty,
-    Mixins: ImmutableArray<string>.Empty
+    Properties: [],
+    Attributes: [],
+    Mixins: []
   );
 
   [Fact]
-  public void AddsDeclaredTypes() {
+  public void AddsDeclaredTypes()
+  {
     // Use a map to guarantee types are added in the order shown below.
     var tree = new ScopeTree(
       [
@@ -151,7 +149,8 @@ public class ScopeTreeTest {
         _outer,
         _genericOuter
       ],
-      new Dictionary<string, DeclaredType>() {
+      new Dictionary<string, DeclaredType>()
+      {
         [_inner.FullNameOpen] = _inner,
         [_outer.FullNameOpen] = _outer,
         [_genericOuter.FullNameOpen] = _genericOuter
@@ -179,7 +178,8 @@ public class ScopeTreeTest {
     Should.Throw<InvalidOperationException>(
       () => new ScopeTree(
         [_inner, _outer],
-        new Dictionary<string, DeclaredType>() {
+        new Dictionary<string, DeclaredType>()
+        {
           [_inner.FullNameOpen] = _inner,
           [_outer.FullNameOpen] = _outer
         }
@@ -187,10 +187,12 @@ public class ScopeTreeTest {
     );
 
   [Fact]
-  public void FindsTypesInScope() {
+  public void FindsTypesInScope()
+  {
     var tree = new ScopeTree(
       [_typeInOtherNs, _typeExtendingTypeInOtherNs],
-      new Dictionary<string, DeclaredType>() {
+      new Dictionary<string, DeclaredType>()
+      {
         [_typeInOtherNs.FullNameOpen] = _typeInOtherNs,
         [_typeExtendingTypeInOtherNs.FullNameOpen] = _typeExtendingTypeInOtherNs,
       }

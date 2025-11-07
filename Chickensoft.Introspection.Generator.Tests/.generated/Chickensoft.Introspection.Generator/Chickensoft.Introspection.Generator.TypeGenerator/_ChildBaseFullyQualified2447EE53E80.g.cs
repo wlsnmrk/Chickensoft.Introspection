@@ -3,6 +3,7 @@
 namespace OtherNamespace.Altogether;
 
 using Chickensoft.Introspection;
+using System.Diagnostics.CodeAnalysis;
 
 partial class ChildBaseFullyQualified2 : Chickensoft.Introspection.IIntrospectiveRef {
   [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]

@@ -17,11 +17,13 @@ public sealed record DeclaredAttribute(
   string Name,
   ImmutableArray<string> ConstructorArgs,
   ImmutableArray<string> InitializerArgs
-) {
+)
+{
   public static void WriteAttributeMap(
     IndentedTextWriter writer,
     ImmutableArray<DeclaredAttribute> attributeUsages
-  ) {
+  )
+  {
     var attributesByName = attributeUsages
       .GroupBy(attr => attr.Name)
       .ToDictionary(
@@ -31,7 +33,8 @@ public sealed record DeclaredAttribute(
 
     writer.WriteCommaSeparatedList(
       attributesByName.Keys.OrderBy(a => a), // Sort for deterministic output.
-      (attributeName) => {
+      (attributeName) =>
+      {
         var attributes = attributesByName[attributeName];
 
         writer.WriteLine(
@@ -50,11 +53,13 @@ public sealed record DeclaredAttribute(
     );
   }
 
-  private void Write(IndentedTextWriter writer) {
+  private void Write(IndentedTextWriter writer)
+  {
     writer.Write($"new {Name}Attribute(");
     writer.Write(string.Join(", ", ConstructorArgs));
     writer.Write(")");
-    if (InitializerArgs.Length > 0) {
+    if (InitializerArgs.Length > 0)
+    {
       writer.Write(" { ");
       writer.Write(string.Join(", ", InitializerArgs));
       writer.Write(" }");

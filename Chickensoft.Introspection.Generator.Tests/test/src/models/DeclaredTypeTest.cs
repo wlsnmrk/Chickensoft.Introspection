@@ -4,7 +4,8 @@ using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class DeclaredTypeTest {
+public class DeclaredTypeTest
+{
   private readonly DeclaredType _type = new(
   Reference: new TypeReference(
     "SomeType",
@@ -28,8 +29,10 @@ public class DeclaredTypeTest {
 );
 
   [Fact]
-  public void Version() {
-    var type = _type with {
+  public void Version()
+  {
+    var type = _type with
+    {
       Attributes = [new DeclaredAttribute(
           Name: Constants.VERSION_ATTRIBUTE_NAME,
           ConstructorArgs:
@@ -42,8 +45,10 @@ public class DeclaredTypeTest {
   }
 
   [Fact]
-  public void MergePartialPicksCorrectSyntaxLocation() {
-    var type = _type with {
+  public void MergePartialPicksCorrectSyntaxLocation()
+  {
+    var type = _type with
+    {
       SyntaxLocation = Microsoft.CodeAnalysis.Location.None,
       Attributes = [new DeclaredAttribute(
           Name: Constants.INTROSPECTIVE_ATTRIBUTE_NAME,
@@ -52,7 +57,8 @@ public class DeclaredTypeTest {
         )]
     };
 
-    var other = _type with {
+    var other = _type with
+    {
       SyntaxLocation = default!
     };
 
@@ -66,8 +72,10 @@ public class DeclaredTypeTest {
   }
 
   [Fact]
-  public void GetState() {
-    var @interface = _type with {
+  public void GetState()
+  {
+    var @interface = _type with
+    {
       Kind = DeclaredTypeKind.Interface
     };
 
@@ -81,7 +89,8 @@ public class DeclaredTypeTest {
       .GetState(false)
       .ShouldBe(DeclaredType.DeclaredTypeState.Unsupported);
 
-    var invalid = _type with {
+    var invalid = _type with
+    {
       Kind = (DeclaredTypeKind)(-1)
     };
 
@@ -92,8 +101,10 @@ public class DeclaredTypeTest {
   }
 
   [Fact]
-  public void DoesNotWriteMetadataForUnsupportedStates() {
-    var @interface = _type with {
+  public void DoesNotWriteMetadataForUnsupportedStates()
+  {
+    var @interface = _type with
+    {
       Kind = DeclaredTypeKind.Interface
     };
 
@@ -105,8 +116,10 @@ public class DeclaredTypeTest {
   }
 
   [Fact]
-  public void HasFallbackId() {
-    var type = _type with {
+  public void HasFallbackId()
+  {
+    var type = _type with
+    {
       SyntaxLocation = Microsoft.CodeAnalysis.Location.None,
       Attributes = [new DeclaredAttribute(
           Name: Constants.ID_ATTRIBUTE_NAME,
@@ -158,7 +171,6 @@ public class DeclaredTypeTest {
     DeclaredTypeKind kind,
     DeclaredTypeKind other,
     DeclaredTypeKind expected
-  ) {
+  ) =>
     DeclaredType.PickDeclaredTypeKind(kind, other).ShouldBe(expected);
-  }
 }

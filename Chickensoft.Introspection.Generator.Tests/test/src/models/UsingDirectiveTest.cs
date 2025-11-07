@@ -4,9 +4,11 @@ using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class UsingDirectiveTest {
+public class UsingDirectiveTest
+{
   [Fact]
-  public void CodeString() {
+  public void CodeString()
+  {
     var @using = new UsingDirective(
       Alias: null,
       Name: "System",
@@ -19,7 +21,8 @@ public class UsingDirectiveTest {
   }
 
   [Fact]
-  public void Equality() {
+  public void Equality()
+  {
     var a = new UsingDirective(
       Alias: null,
       Name: "System",

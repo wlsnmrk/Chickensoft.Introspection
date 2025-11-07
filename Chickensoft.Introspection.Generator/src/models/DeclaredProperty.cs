@@ -27,8 +27,10 @@ public sealed record DeclaredProperty(
   string? ExplicitInterfaceName,
   TypeNode TypeNode,
   ImmutableArray<DeclaredAttribute> Attributes
-) {
-  public void Write(IndentedTextWriter writer, string typeSimpleNameClosed) {
+)
+{
+  public void Write(IndentedTextWriter writer, string typeSimpleNameClosed)
+  {
     writer.WriteLine($"new {Constants.PROPERTY_METADATA}(");
     writer.Indent++;
 

@@ -5,6 +5,7 @@ namespace AliasedStuff.Nested;
 using Chickensoft.Introspection;
 using X = OtherNamespace.Altogether.A;
 using Y = OtherNamespace.Altogether.A.B;
+using System.Diagnostics.CodeAnalysis;
 
 partial class ExtendsTypeFromSomewhereElse : Chickensoft.Introspection.IIntrospectiveRef {
   [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]

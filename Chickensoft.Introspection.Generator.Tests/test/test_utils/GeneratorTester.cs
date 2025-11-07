@@ -14,17 +14,19 @@ public readonly record struct GeneratorOutput(
   ImmutableArray<Diagnostic> Diagnostics
 );
 
-public static class TestStringExtensions {
+public static class TestStringExtensions
+{
   public static string Clean(this string text) => string.Join(
     "\n",
     text.NormalizeLineEndings("\n").Split('\n').Select(line => $"// {line}")
   ).NormalizeLineEndings();
 }
 
-public static class Tester {
-  public static SemanticModel GetSemanticModel(string code) {
+public static class Tester
+{
+  public static SemanticModel GetSemanticModel(string code)
+  {
     var tree = CSharpSyntaxTree.ParseText(code);
-    var root = tree.GetRoot();
 
     return CSharpCompilation
       .Create("AssemblyName")
@@ -34,7 +36,8 @@ public static class Tester {
 
   public static GeneratorOutput Generate(
     this IIncrementalGenerator generator, params string[] sources
-  ) {
+  )
+  {
     var syntaxTrees = sources.Select(
       source => CSharpSyntaxTree.ParseText(source)
     );
@@ -61,9 +64,11 @@ public static class Tester {
       );
 
     var outputs = new Dictionary<string, string>();
-    foreach (var output in outputCompilation.SyntaxTrees) {
+    foreach (var output in outputCompilation.SyntaxTrees)
+    {
       var text = output.ToString();
-      if (text is not null && !sources.Contains(text)) {
+      if (text is not null && !sources.Contains(text))
+      {
         outputs.Add(Path.GetFileName(output.FilePath), text);
       }
     }
@@ -100,7 +105,8 @@ public static class Tester {
   /// <typeparamref name="TNode" />.</returns>
   public static TNode Parse<TNode, TSymbol>(string code, out TSymbol symbol)
     where TNode : SyntaxNode
-    where TSymbol : ISymbol {
+    where TSymbol : ISymbol
+  {
     var tree = CSharpSyntaxTree.ParseText(code);
     var node = (TNode)tree
       .GetRoot()
@@ -123,7 +129,8 @@ public static class Tester {
   /// <returns>Symbol associated with the syntax tree node.</returns>
   public static TSymbol GetSymbol<TNode, TSymbol>(SyntaxTree tree, TNode node)
     where TNode : SyntaxNode
-    where TSymbol : ISymbol {
+    where TSymbol : ISymbol
+  {
     var references = AppDomain.CurrentDomain.GetAssemblies()
       .Where(assembly => !assembly.IsDynamic)
       .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
@@ -156,11 +163,13 @@ public static class Tester {
   ));
 }
 
-public static class StringExtensions {
+public static class StringExtensions
+{
   public static string NormalizeLineEndings(
     this string text,
     string? newLine = null
-  ) {
+  )
+  {
     newLine ??= Environment.NewLine;
     return text
       .Replace("\r\n", "\n")

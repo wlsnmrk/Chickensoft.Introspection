@@ -4,9 +4,11 @@ using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class DeclaredAttributeTest {
+public class DeclaredAttributeTest
+{
   [Fact]
-  public void Equality() {
+  public void Equality()
+  {
     var attr = new DeclaredAttribute(
       "", [], []
     );

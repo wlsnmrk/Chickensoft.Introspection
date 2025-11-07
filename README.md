@@ -73,7 +73,8 @@ using Chickensoft.Introspection;
 [Meta]
 public partial class MyType;
 
-public partial class Container {
+public partial class Container
+{
   // Nested types are supported, too.
   [Meta]
   public partial class MyType;
@@ -178,37 +179,43 @@ In addition to the metadata classes, each metadata class implements the appropri
 
 ```csharp
 public class MyTypeReceiver : ITypeReceiver {
-  public void Receive<T>() {
+  public void Receive<T>()
+  {
     // Do whatever you want with the type as a generic parameter.
   }
 }
 
 var metadata = Types.Graph.GetMetadata(typeof(Model));
 
-if (metadata is IClosedTypeMetadata closedMetadata) {
+if (metadata is IClosedTypeMetadata closedMetadata)
+{
   // Closed types allow you to receive the type as a generic argument in
   // a TypeReceiver's Receive<T>() method.
   closedMetadata.GenericTypeGetter(new MyTypeReceiver())
 }
 
-if (metadata is IConcreteTypeMetadata concreteMetadata) {
+if (metadata is IConcreteTypeMetadata concreteMetadata)
+{
   // Concrete types allow you to create a new instance of the type, if
   // it has a parameterless constructor.
   var instance = concreteMetadata.Factory();
 }
 
-if (metadata is IIntrospectiveTypeMetadata introMetadata) {
+if (metadata is IIntrospectiveTypeMetadata introMetadata)
+{
   // Introspective types provide a metatype instance which allows you to access
   // more information about that type, such as its properties and attributes.
   var metatype = introMetadata.Metatype;
 }
 
-if (metadata is IConcreteIntrospectiveTypeMetadata concreteIntroMetadata) {
+if (metadata is IConcreteIntrospectiveTypeMetadata concreteIntroMetadata)
+{
   // Concrete introspective types have a version number.
   var version = concreteIntroMetadata.Version;
 }
 
-if (metadata is IIdentifiableTypeMetadata idMetadata) {
+if (metadata is IIdentifiableTypeMetadata idMetadata)
+{
   // Identifiable types have an id.
   var id = idMetadata.Id;
 }
@@ -318,14 +325,15 @@ Introspective type instances can also cast themselves to `IIntrospectiveRef` to 
 ```csharp
 // Declare a mixin
 [Mixin]
-public interface IMyMixin : IMixin<IMyMixin> {
+public interface IMyMixin : IMixin<IMyMixin>
+{
   void IMixin<IMyMixin>.Handler() { }
 }
 
 // Use a mixin
 [Meta(typeof(Mixin))]
-public partial class MyModel {
-
+public partial class MyModel
+{
   // Use mixins
   public void MyMethod() {
     // Call all applied mixin handlers
@@ -348,13 +356,15 @@ The introspection generator can generate metadata about value types, too.
 
 ```csharp
 [Meta]
-public readonly partial record struct ValueType {
+public readonly partial record struct ValueType
+{
   public required int Number { get; init; }
   public string? Description { get; init; }
 }
 
 [Meta, Id("value_type_with_id")]
-public readonly partial record struct ValueTypeWithId {
+public readonly partial record struct ValueTypeWithId
+{
   public required int Number { get; init; }
   public string? Description { get; init; }
 }
@@ -366,7 +376,8 @@ Likewise, you can introspect a value type the same as other introspective types:
 // Get a type's properties
 var properties = Types.Graph.GetProperties(typeof(ValueType));
 
-foreach (var property in properties) {
+foreach (var property in properties)
+{
   // ... do something with the properties of the type
 }
 ```

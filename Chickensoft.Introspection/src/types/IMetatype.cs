@@ -6,7 +6,8 @@ using System.Collections.Generic;
 /// <summary>
 /// Represents a metatype — a type that helps describe another type.
 /// </summary>
-public interface IMetatype {
+public interface IMetatype
+{
   /// <summary>System type of the introspective type.</summary>
   Type Type { get; }
 

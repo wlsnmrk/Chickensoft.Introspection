@@ -10,7 +10,8 @@ public sealed record TypeReference(
   Construction Construction,
   bool IsPartial,
   ImmutableArray<string> TypeParameters
-) {
+)
+{
   /// <summary>
   /// Open generics portion of the type name (if generic). Otherwise, blank
   /// string.
@@ -80,9 +81,11 @@ public sealed record TypeReference(
     bool isPartial,
     Construction construction,
     string name
-  ) {
+  )
+  {
     var partial = isPartial ? "partial " : string.Empty;
-    var code = construction switch {
+    var code = construction switch
+    {
       Construction.StaticClass => $"static {partial}class ",
       Construction.Class => $"{partial}class ",
       Construction.RecordStruct => $"{partial}record struct ",

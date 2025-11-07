@@ -1,16 +1,19 @@
 namespace Chickensoft.Introspection.Tests;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Shouldly;
 using Xunit;
 
 [Mixin]
-public interface IMixin1 : IMixin<IMixin1> {
+public interface IMixin1 : IMixin<IMixin1>
+{
   void IMixin<IMixin1>.Handler() => IIntrospectiveTest.Called1 = true;
 }
 
 [Mixin]
-public interface IMixin2 : IMixin<IMixin2> {
+public interface IMixin2 : IMixin<IMixin2>
+{
   void IMixin<IMixin2>.Handler() => IIntrospectiveTest.Called2 = true;
 }
 
@@ -18,17 +21,27 @@ public interface IMixin2 : IMixin<IMixin2> {
 [Meta(typeof(IMixin1), typeof(IMixin2))]
 public partial class MyTypeWithAMixin { }
 
-public class IIntrospectiveTest {
+public class IIntrospectiveTest
+{
   public static bool Called1 { get; set; }
   public static bool Called2 { get; set; }
 
-  public IIntrospectiveTest() {
+  public IIntrospectiveTest()
+  {
     Called1 = false;
     Called2 = false;
   }
 
   [Fact]
-  public void MixinIsCalled() {
+  [
+    SuppressMessage(
+      "Performance",
+      "CA1859",
+      Justification = "Testing interface"
+    )
+  ]
+  public void MixinIsCalled()
+  {
     IIntrospectiveRef myType = new MyTypeWithAMixin();
     myType.InvokeMixin(typeof(IMixin1));
 
@@ -36,7 +49,15 @@ public class IIntrospectiveTest {
   }
 
   [Fact]
-  public void AllMixinsCalled() {
+  [
+    SuppressMessage(
+      "Performance",
+      "CA1859",
+      Justification = "Testing interface"
+    )
+  ]
+  public void AllMixinsCalled()
+  {
     IIntrospectiveRef myType = new MyTypeWithAMixin();
     myType.InvokeMixins();
 
@@ -45,7 +66,15 @@ public class IIntrospectiveTest {
   }
 
   [Fact]
-  public void ThrowsOnMissingMixin() {
+  [
+    SuppressMessage(
+      "Performance",
+      "CA1859",
+      Justification = "Testing interface"
+    )
+  ]
+  public void ThrowsOnMissingMixin()
+  {
     IIntrospectiveRef myType = new MyTypeWithAMixin();
     Should.Throw<InvalidOperationException>(
       () => myType.InvokeMixin(typeof(IIntrospectiveTest))

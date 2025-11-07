@@ -5,6 +5,7 @@ namespace AliasedStuff.Nested;
 using Chickensoft.Introspection;
 using X = OtherNamespace.Altogether.A;
 using Y = OtherNamespace.Altogether.A.B;
+using System.Diagnostics.CodeAnalysis;
 
 partial class Child : Chickensoft.Introspection.IIntrospectiveRef {
   [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -27,6 +28,9 @@ partial class Child : Chickensoft.Introspection.IIntrospectiveRef {
     public System.Collections.Generic.IReadOnlyDictionary<System.Type, System.Attribute[]> Attributes { get; } = new System.Collections.Generic.Dictionary<System.Type, System.Attribute[]>() {
       [typeof(MetaAttribute)] = new System.Attribute[] {
         new MetaAttribute()
+      }, 
+      [typeof(SuppressMessageAttribute)] = new System.Attribute[] {
+        new SuppressMessageAttribute("Style", "IDE0001") { Justification = "Fully qualified name behavior under test" }
       }
     };
     

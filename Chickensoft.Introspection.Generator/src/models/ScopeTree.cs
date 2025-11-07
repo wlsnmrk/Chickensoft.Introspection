@@ -1,10 +1,12 @@
 namespace Chickensoft.Introspection.Generator.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class ScopeTree {
+public class ScopeTree
+{
   public NamespaceNode Root { get; } = new NamespaceNode(
     null, "", [], []
   );
@@ -15,27 +17,32 @@ public class ScopeTree {
   public ScopeTree(
     IEnumerable<DeclaredType> types,
     IDictionary<string, DeclaredType> typesByFullNameOpen
-  ) {
+  )
+  {
     TypesByFullNameOpen = typesByFullNameOpen;
     InitializeTree(types);
   }
 
-  private void InitializeTree(IEnumerable<DeclaredType> typesByFullNameOpen) {
-    foreach (var declaredType in typesByFullNameOpen) {
+  private void InitializeTree(IEnumerable<DeclaredType> typesByFullNameOpen)
+  {
+    foreach (var declaredType in typesByFullNameOpen)
+    {
       AddType(declaredType);
     }
   }
 
-  private void AddType(DeclaredType type) {
+  private void AddType(DeclaredType type)
+  {
     // Walk the namespaces tree. Once we have walked / constructed
     // namespaces, we'll be in the right spot to add the type.
 
     var currentNs = Root;
-    foreach (var @namespace in type.Location.Namespaces) {
-      if (!currentNs.Children.TryGetValue(@namespace, out var childNs)) {
+    foreach (var @namespace in type.Location.Namespaces)
+    {
+      if (!currentNs.Children.TryGetValue(@namespace, out _))
+      {
         // Make namespace if it doesn't exist in the tree yet.
-
-        childNs = new NamespaceNode(
+        var childNs = new NamespaceNode(
           Parent: currentNs,
           Name: @namespace,
           Children: [],
@@ -53,13 +60,15 @@ public class ScopeTree {
     // if needed.
     ScopeNode current = currentNs;
 
-    foreach (var containingType in GetContainingTypes(type)) {
+    foreach (var containingType in GetContainingTypes(type))
+    {
       // Ensure that the type has a corresponding entry in the tree.
       if (
         !current.TypeChildren.TryGetValue(
           containingType.Reference.SimpleNameOpen, out var child
         )
-      ) {
+      )
+      {
         child = new TypeTreeNode(
           Parent: current,
           Type: containingType,
@@ -75,7 +84,8 @@ public class ScopeTree {
       current = child;
     }
 
-    if (current.TypeChildren.ContainsKey(type.Reference.SimpleNameOpen)) {
+    if (current.TypeChildren.ContainsKey(type.Reference.SimpleNameOpen))
+    {
       // Type already in the tree. Do nothing.
       return;
     }
@@ -117,46 +127,58 @@ public class ScopeTree {
     Func<TypeTreeNode, bool> predicate,
     bool generic = true,
     bool @private = false
-  ) {
-    if (node is NamespaceNode nsNode) {
+  )
+  {
+    if (node is NamespaceNode nsNode)
+    {
       // Recurse into child namespaces.
-      foreach (var childNs in nsNode.Children.Values) {
-        foreach (var type in GetTypes(childNs, predicate, generic, @private)) {
+      foreach (var childNs in nsNode.Children.Values)
+      {
+        foreach (var type in GetTypes(childNs, predicate, generic, @private))
+        {
           yield return type;
         }
       }
 
       // Recurse into types contained at this namespace.
-      foreach (var child in node.TypeChildren.Values) {
-        foreach (var type in GetTypes(child, predicate, generic, @private)) {
+      foreach (var child in node.TypeChildren.Values)
+      {
+        foreach (var type in GetTypes(child, predicate, generic, @private))
+        {
           yield return type;
         }
       }
     }
 
-    if (node is not TypeTreeNode typeNode) {
+    if (node is not TypeTreeNode typeNode)
+    {
       yield break;
     }
 
-    if (typeNode.Type.IsGeneric && !generic) {
+    if (typeNode.Type.IsGeneric && !generic)
+    {
       // Type is generic and we're not supposed to search generic types.
       yield break;
     }
 
-    if (!typeNode.Type.IsPublicOrInternal && !@private) {
+    if (!typeNode.Type.IsPublicOrInternal && !@private)
+    {
       // Type is not visible from the top-level scope and we're not supposed
       // to search non-visible types.
       yield break;
     }
 
-    if (predicate(typeNode)) {
+    if (predicate(typeNode))
+    {
       // Type satisfies predicate.
       yield return typeNode.Type;
     }
 
     // Recurse into child types.
-    foreach (var child in node.TypeChildren.Values) {
-      foreach (var type in GetTypes(child, predicate, generic)) {
+    foreach (var child in node.TypeChildren.Values)
+    {
+      foreach (var type in GetTypes(child, predicate, generic))
+      {
         yield return type;
       }
     }
@@ -179,7 +201,8 @@ public class ScopeTree {
     IEnumerable<UsingDirective> globalUsings,
     DeclaredType type,
     string reference
-  ) {
+  )
+  {
     reference = reference.Replace("global::", "");
     var referenceParts = reference.Split('.');
 
@@ -191,24 +214,30 @@ public class ScopeTree {
 
     // First, add the scope of the containing types to search.
     // We search containing types from innermost to outermost.
-    foreach (var containingType in GetContainingTypes(type)) {
-      if (GetNode(containingType) is { } node) {
+    foreach (var containingType in GetContainingTypes(type))
+    {
+      if (GetNode(containingType) is { } node)
+      {
         nodes.AddFirst(node);
       }
     }
 
     // Next, Enqueue the namespace of the type itself
-    if (GetNode(type.Location.Namespace) is { } nsNode) {
+    if (GetNode(type.Location.Namespace) is { } nsNode)
+    {
       nodes.AddLast(nsNode);
     }
 
     // Then, add the scopes indicated by the using directives.
-    foreach (var @using in type.Usings.Union(globalUsings)) {
-      if (GetNode(@using.Name) is not { } node) {
+    foreach (var @using in type.Usings.Union(globalUsings))
+    {
+      if (GetNode(@using.Name) is not { } node)
+      {
         continue;
       }
 
-      if (@using.Alias is { } alias && node is TypeTreeNode typeNode) {
+      if (@using.Alias is { } alias && node is TypeTreeNode typeNode)
+      {
         aliasedTypes[alias] = typeNode;
         continue;
       }
@@ -217,20 +246,23 @@ public class ScopeTree {
     }
 
     // Search aliases before anything else.
-    foreach (var alias in aliasedTypes.Keys) {
+    foreach (var alias in aliasedTypes.Keys)
+    {
       if (
         GetTypeByAliasReference(
           reference: reference,
           alias: alias,
           aliasedTypeNode: aliasedTypes[alias]
         ) is { } aliasedType
-      ) {
+      )
+      {
         return aliasedType;
       }
     }
 
     // Search the nodes in order.
-    foreach (var node in nodes) {
+    foreach (var node in nodes)
+    {
       // Recursively find types inside the scope of this node.
       var candidate = GetTypes(
         node,
@@ -240,13 +272,15 @@ public class ScopeTree {
         @private: false
       ).FirstOrDefault();
 
-      if (candidate is not null) {
+      if (candidate is not null)
+      {
         return candidate;
       }
     }
 
     // Lastly, see if the reference is a fully qualified type name.
-    if (TypesByFullNameOpen.TryGetValue(reference, out var qualifiedType)) {
+    if (TypesByFullNameOpen.TryGetValue(reference, out var qualifiedType))
+    {
       return qualifiedType;
     }
 
@@ -257,8 +291,10 @@ public class ScopeTree {
     string reference,
     string alias,
     TypeTreeNode aliasedTypeNode
-  ) {
-    if (reference == alias) {
+  )
+  {
+    if (reference == alias)
+    {
       // Type reference is nothing but the alias. Easy.
       return aliasedTypeNode.Type;
     }
@@ -268,7 +304,8 @@ public class ScopeTree {
         reference.Substring(alias.Length + 1) is { } path &&
         aliasedTypeNode.Type.FullNameOpen + "." + path is { } fullPath &&
         TypesByFullNameOpen.TryGetValue(fullPath, out var aliasedType)
-      ) {
+      )
+    {
       // Type reference refers to the alias, plus some.
       return aliasedType;
     }
@@ -282,7 +319,8 @@ public class ScopeTree {
   private ScopeNode? GetNode(string fullNameOpen) =>
     GetNode(new Queue<string>(fullNameOpen.Split('.')));
 
-  private ScopeNode? GetNode(Queue<string> nameParts) {
+  private ScopeNode? GetNode(Queue<string> nameParts)
+  {
     ScopeNode current = Root;
 
     // Walk the namespaces.
@@ -290,7 +328,8 @@ public class ScopeTree {
       nameParts.Count > 0 &&
       current is NamespaceNode nsNode &&
       nsNode.Children.TryGetValue(nameParts.Peek(), out var next)
-    ) {
+    )
+    {
       nameParts.Dequeue();
       current = next;
     }
@@ -299,7 +338,8 @@ public class ScopeTree {
     while (
       nameParts.Count > 0 &&
       current.TypeChildren.TryGetValue(nameParts.Peek(), out var next)
-    ) {
+    )
+    {
       nameParts.Dequeue();
       current = next;
     }
@@ -307,9 +347,11 @@ public class ScopeTree {
     return nameParts.Count == 0 ? current : null;
   }
 
-  private IEnumerable<DeclaredType> GetContainingTypes(DeclaredType type) {
+  private IEnumerable<DeclaredType> GetContainingTypes(DeclaredType type)
+  {
     var containingTypes = new StringBuilder();
-    foreach (var containingTypeRef in type.Location.ContainingTypes) {
+    foreach (var containingTypeRef in type.Location.ContainingTypes)
+    {
       containingTypes.Append(containingTypeRef.SimpleNameOpen);
 
       var fullNameOpen =
@@ -323,7 +365,8 @@ public class ScopeTree {
       // Ensure that the containing type exists in the table of all types.
       if (
         !TypesByFullNameOpen.TryGetValue(fullNameOpen, out var containingType)
-      ) {
+      )
+      {
         throw new InvalidOperationException(
           "Could not find the containing type " +
           $"`{fullNameOpen}` of `{type.FullNameOpen}`."
@@ -337,20 +380,24 @@ public class ScopeTree {
   private bool FullNameMatchesReferenceParts(
     string fullName,
     IList<string> referenceParts
-  ) {
+  )
+  {
     var fullNameParts = fullName.Split('.');
 
     if (
       fullNameParts.Length < referenceParts.Count
-    ) {
+    )
+    {
       return false;
     }
 
-    for (var i = referenceParts.Count - 1; i >= 0; i--) {
+    for (var i = referenceParts.Count - 1; i >= 0; i--)
+    {
       if (
         referenceParts[i] !=
           fullNameParts[fullNameParts.Length - referenceParts.Count + i]
-      ) {
+      )
+      {
         return false;
       }
     }

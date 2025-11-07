@@ -1,13 +1,14 @@
 namespace Chickensoft.Introspection.Generator.Tests.Models;
 
-using System.Collections.Immutable;
 using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class DeclaredPropertyTest {
+public class DeclaredPropertyTest
+{
   [Fact]
-  public void Equality() {
+  public void Equality()
+  {
     var prop = new DeclaredProperty(
       Name: "Name",
       HasGetter: true,
@@ -17,10 +18,8 @@ public class DeclaredPropertyTest {
       IsNullable: false,
       DefaultValueExpression: null,
       ExplicitInterfaceName: null,
-      TypeNode: new TypeNode(
-        "System.String", false, Children: ImmutableArray<TypeNode>.Empty
-      ),
-      Attributes: ImmutableArray<DeclaredAttribute>.Empty
+      TypeNode: new TypeNode("System.String", false, Children: []),
+      Attributes: []
     );
 
     prop.GetHashCode().ShouldBeOfType<int>();
@@ -37,10 +36,8 @@ public class DeclaredPropertyTest {
         IsNullable: false,
         DefaultValueExpression: null,
         ExplicitInterfaceName: null,
-        TypeNode: new TypeNode(
-          "System.String", false, Children: ImmutableArray<TypeNode>.Empty
-        ),
-        Attributes: ImmutableArray<DeclaredAttribute>.Empty
+        TypeNode: new TypeNode("System.String", false, Children: []),
+        Attributes: []
       )
     );
 
@@ -54,11 +51,9 @@ public class DeclaredPropertyTest {
       DefaultValueExpression: null,
       ExplicitInterfaceName: null,
       TypeNode: new TypeNode(
-        "System.String", false, Children: ImmutableArray<TypeNode>.Empty
+        "System.String", false, Children: []
       ),
-      Attributes: new DeclaredAttribute[] {
-        new("", ImmutableArray<string>.Empty, ImmutableArray<string>.Empty)
-      }.ToImmutableArray()
+      Attributes: [new("", [], [])]
     ).ShouldNotBe(
       new DeclaredProperty(
         Name: "Name",
@@ -69,10 +64,8 @@ public class DeclaredPropertyTest {
         IsNullable: false,
         DefaultValueExpression: null,
         ExplicitInterfaceName: null,
-        TypeNode: new TypeNode(
-          "System.String", false, Children: ImmutableArray<TypeNode>.Empty
-        ),
-        Attributes: ImmutableArray<DeclaredAttribute>.Empty
+        TypeNode: new TypeNode("System.String", false, Children: []),
+        Attributes: []
       )
     );
   }

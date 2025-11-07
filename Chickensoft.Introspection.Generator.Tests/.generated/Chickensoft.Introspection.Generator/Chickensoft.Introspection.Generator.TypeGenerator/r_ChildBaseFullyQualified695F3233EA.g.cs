@@ -3,6 +3,7 @@
 namespace OtherNamespace.Altogether;
 
 using Chickensoft.Introspection;
+using System.Diagnostics.CodeAnalysis;
 
 partial class ChildBaseFullyQualified : Chickensoft.Introspection.IIntrospectiveRef {
   [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -25,6 +26,9 @@ partial class ChildBaseFullyQualified : Chickensoft.Introspection.IIntrospective
     public System.Collections.Generic.IReadOnlyDictionary<System.Type, System.Attribute[]> Attributes { get; } = new System.Collections.Generic.Dictionary<System.Type, System.Attribute[]>() {
       [typeof(MetaAttribute)] = new System.Attribute[] {
         new MetaAttribute()
+      }, 
+      [typeof(SuppressMessageAttribute)] = new System.Attribute[] {
+        new SuppressMessageAttribute("Style", "IDE0001") { Justification = "Fully qualified name behavior under test" }
       }
     };
     

@@ -1,6 +1,7 @@
 namespace Chickensoft.Introspection.Generator.Models;
 
-public enum Construction {
+public enum Construction
+{
   StaticClass,
   Class,
   RecordStruct,

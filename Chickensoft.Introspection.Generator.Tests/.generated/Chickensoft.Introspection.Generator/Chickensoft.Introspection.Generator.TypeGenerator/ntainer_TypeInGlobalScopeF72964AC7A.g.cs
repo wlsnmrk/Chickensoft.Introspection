@@ -1,6 +1,7 @@
 ﻿#pragma warning disable
 #nullable enable
 using Chickensoft.Introspection;
+using System.Diagnostics.CodeAnalysis;
 
 partial class GlobalScopeContainer {
   partial class TypeInGlobalScope : Chickensoft.Introspection.IIntrospectiveRef {

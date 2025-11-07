@@ -4,16 +4,19 @@ using Moq;
 using Shouldly;
 using Xunit;
 
-public class TypeMetadataTest {
+public class TypeMetadataTest
+{
   [Fact]
-  public void InitializesTypeMetadata() {
+  public void InitializesTypeMetadata()
+  {
     var metadata = new TypeMetadata("Name");
 
     metadata.ShouldBeAssignableTo<ITypeMetadata>();
   }
 
   [Fact]
-  public void InitializesConcreteTypeMetadata() {
+  public void InitializesConcreteTypeMetadata()
+  {
     var metadata = new ConcreteTypeMetadata(
       Name: "Name",
       GenericTypeGetter: (r) => r.Receive<string>(),
@@ -26,7 +29,8 @@ public class TypeMetadataTest {
   }
 
   [Fact]
-  public void InitializesAbstractIntrospectiveTypeMetadata() {
+  public void InitializesAbstractIntrospectiveTypeMetadata()
+  {
     var metatype = new Mock<IMetatype>();
 
     var metadata = new AbstractIntrospectiveTypeMetadata(
@@ -41,7 +45,8 @@ public class TypeMetadataTest {
   }
 
   [Fact]
-  public void InitializesIntrospectiveTypeMetadata() {
+  public void InitializesIntrospectiveTypeMetadata()
+  {
     var metatype = new Mock<IMetatype>();
 
     var metadata = new IntrospectiveTypeMetadata(
@@ -59,7 +64,8 @@ public class TypeMetadataTest {
   }
 
   [Fact]
-  public void InitializesAbstractIdentifiableTypeMetadata() {
+  public void InitializesAbstractIdentifiableTypeMetadata()
+  {
     var metatype = new Mock<IMetatype>();
 
     var metadata = new AbstractIdentifiableTypeMetadata(
@@ -76,7 +82,8 @@ public class TypeMetadataTest {
   }
 
   [Fact]
-  public void InitializesIdentifiableTypeMetadata() {
+  public void InitializesIdentifiableTypeMetadata()
+  {
     var metatype = new Mock<IMetatype>();
 
     var metadata = new IdentifiableTypeMetadata(

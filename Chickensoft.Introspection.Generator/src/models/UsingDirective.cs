@@ -18,7 +18,8 @@ public sealed record UsingDirective(
   bool IsGlobal,
   bool IsStatic,
   bool IsAlias
-) {
+)
+{
   public string CodeString => IsGlobal
     ? $"global using {Name};"
     : IsStatic

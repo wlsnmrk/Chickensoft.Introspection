@@ -1,7 +1,11 @@
-namespace Chickensoft.Introspection.Generator.Tests.TestCases {
-  namespace TraditionalNamespace {
-    public class A {
-      public sealed class AA {
+namespace Chickensoft.Introspection.Generator.Tests.TestCases
+{
+  namespace TraditionalNamespace
+  {
+    public class A
+    {
+      public sealed class AA
+      {
         public sealed class AAA;
       }
       internal sealed class AB;
@@ -17,7 +21,8 @@ namespace Chickensoft.Introspection.Generator.Tests.TestCases {
 
     public sealed class GA<TA>;
     public sealed class GB<TA, TB>;
-    public class GC<TA, TB, TC> {
+    public class GC<TA, TB, TC>
+    {
       public sealed class GCA;
       internal sealed class GCB;
       protected internal sealed class GCC;

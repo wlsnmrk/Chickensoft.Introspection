@@ -4,10 +4,12 @@ using Chickensoft.Introspection.Generator.Tests.TestCases;
 using Shouldly;
 using Xunit;
 
-public class NoIdTest {
+public class NoIdTest
+{
   [Fact]
-  public void ModelWithoutExplicitIdIsAllowed() {
-    var metadata = TypeRegistry.Instance.VisibleTypes[typeof(NoId)]
+  public void ModelWithoutExplicitIdIsAllowed()
+  {
+    TypeRegistry.Instance.VisibleTypes[typeof(NoId)]
       .ShouldBeOfType<IntrospectiveTypeMetadata>();
   }
 }

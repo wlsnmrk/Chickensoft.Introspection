@@ -1,15 +1,16 @@
 namespace Chickensoft.Introspection.Generator.Tests.Models;
 
-using System.Collections.Immutable;
 using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class TypeNodeTest {
+public class TypeNodeTest
+{
   [Fact]
-  public void Equality() {
+  public void Equality()
+  {
     var node = new TypeNode(
-      "Type", false, ImmutableArray<TypeNode>.Empty
+      "Type", false, []
     );
 
     node.Equals(null).ShouldBeFalse();

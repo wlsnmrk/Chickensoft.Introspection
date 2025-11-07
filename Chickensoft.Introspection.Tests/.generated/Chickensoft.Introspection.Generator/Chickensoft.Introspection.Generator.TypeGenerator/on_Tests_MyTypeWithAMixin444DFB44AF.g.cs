@@ -4,6 +4,7 @@ namespace Chickensoft.Introspection.Tests;
 
 using Shouldly;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 partial class MyTypeWithAMixin : Chickensoft.Introspection.IIntrospectiveRef, IMixin1, IMixin2 {

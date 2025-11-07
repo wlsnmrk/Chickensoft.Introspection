@@ -4,9 +4,11 @@ using Chickensoft.Introspection.Generator.Tests.TestCases;
 using Shouldly;
 using Xunit;
 
-public class NameOfIdTest {
+public class NameOfIdTest
+{
   [Fact]
-  public void ModelWithNameOfIdWorks() {
+  public void ModelWithNameOfIdWorks()
+  {
     var idMetadata =
       TypeRegistry.Instance.VisibleTypes[typeof(NameOfId)]
         .ShouldBeAssignableTo<IIdentifiableTypeMetadata>().ShouldNotBeNull();

@@ -9,14 +9,17 @@ using Moq;
 using Shouldly;
 using Xunit;
 
-public partial class TypeGraphTest {
+public partial class TypeGraphTest
+{
   [Meta, Id("test_model")]
-  public partial class Model {
+  public partial class Model
+  {
     public string Name { get; } = "model";
   }
 
   [Meta, Id("test_model_subtype_a")]
-  public partial class SubtypeA : Model {
+  public partial class SubtypeA : Model
+  {
 
     [Meta, Id("test_model_subtype_b")]
     public partial class SubtypeB : SubtypeA { }
@@ -29,7 +32,8 @@ public partial class TypeGraphTest {
   public partial class NoSubtypes { }
 
   [Fact]
-  public void EnumeratesRegisteredTypes() {
+  public void EnumeratesRegisteredTypes()
+  {
     Types.Graph.IdentifiableTypes.ShouldContain(typeof(Model));
     Types.Graph.IdentifiableTypes.ShouldContain(typeof(SubtypeA));
     Types.Graph.IdentifiableTypes.ShouldContain(typeof(SubtypeA.SubtypeB));
@@ -48,13 +52,15 @@ public partial class TypeGraphTest {
     Types.Graph.HasMetadata(typeof(Model)).ShouldBeTrue();
 
   [Fact]
-  public void GetMetadata() {
+  public void GetMetadata()
+  {
     Types.Graph.GetMetadata(typeof(Model)).ShouldNotBeNull();
     Types.Graph.GetMetadata(typeof(object)).ShouldBeNull();
   }
 
   [Fact]
-  public void GetSubtypes() {
+  public void GetSubtypes()
+  {
     Types.Graph.GetSubtypes(typeof(Model))
       .ShouldBe([
         typeof(SubtypeA),
@@ -64,7 +70,8 @@ public partial class TypeGraphTest {
   }
 
   [Fact]
-  public void GetProperties() {
+  public void GetProperties()
+  {
     var props = Types.Graph.GetProperties(typeof(Model)).ToList();
     props.Count.ShouldBe(1);
     props[0].Name.ShouldBe("Name");
@@ -73,7 +80,8 @@ public partial class TypeGraphTest {
   }
 
   [Fact]
-  public void GetAttribute() {
+  public void GetAttribute()
+  {
     var attr = Types.Graph.GetAttribute<MetaAttribute>(typeof(Model));
     attr.ShouldNotBeNull();
 
@@ -82,7 +90,8 @@ public partial class TypeGraphTest {
   }
 
   [Fact]
-  public void AddCustomType() {
+  public void AddCustomType()
+  {
     Types.Graph.AddCustomType(
       typeof(ObsoleteAttribute),
       "ObsoleteAttribute",
@@ -107,7 +116,8 @@ public partial class TypeGraphTest {
   }
 }
 
-public class TypeGraphAncestryTest {
+public class TypeGraphAncestryTest
+{
   public class Ancestor;
   public class Parent : Ancestor;
   public class Child : Parent;
@@ -116,7 +126,8 @@ public class TypeGraphAncestryTest {
   public class ParentCousin : AncestorSibling;
   public class ChildCousin : ParentCousin;
 
-  private static readonly Dictionary<Type, ITypeMetadata> _visibleTypes = new() {
+  private static readonly Dictionary<Type, ITypeMetadata> _visibleTypes = new()
+  {
     [typeof(Ancestor)] = new Mock<ITypeMetadata>().Object,
     [typeof(Parent)] = new Mock<ITypeMetadata>().Object,
     [typeof(Child)] = new Mock<ITypeMetadata>().Object,
@@ -126,12 +137,14 @@ public class TypeGraphAncestryTest {
   };
   private readonly Mock<ITypeRegistry> _registry;
 
-  public TypeGraphAncestryTest() {
+  public TypeGraphAncestryTest()
+  {
     _registry = new Mock<ITypeRegistry>();
   }
 
   [Fact]
-  public void GetDescendantSubtypes() {
+  public void GetDescendantSubtypes()
+  {
     _registry.Setup(reg => reg.VisibleTypes).Returns(_visibleTypes);
 
     Types.Graph.Register(_registry.Object);
@@ -175,12 +188,14 @@ public class TypeGraphAncestryTest {
   }
 
   [Fact]
-  public void ObjectWithoutBaseTypeIsNonIssue() {
+  public void ObjectWithoutBaseTypeIsNonIssue()
+  {
     // When looking up a type that has no base type — i.e., typeof(object)) —
     // we want to make sure we don't crash.
     _registry
       .Setup(reg => reg.VisibleTypes)
-      .Returns(new Dictionary<Type, ITypeMetadata> {
+      .Returns(new Dictionary<Type, ITypeMetadata>
+      {
         [typeof(TypeGraphAncestryTest)] = new Mock<ITypeMetadata>().Object,
       });
 
@@ -195,29 +210,35 @@ public class TypeGraphAncestryTest {
 
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
-public class TagAttribute : Attribute {
+public class TagAttribute : Attribute
+{
   public string Name { get; }
 
-  public TagAttribute(string name) {
+  public TagAttribute(string name)
+  {
     Name = name;
   }
 }
 
-public partial class TypeGraphMemberMetadataTest {
+public partial class TypeGraphMemberMetadataTest
+{
   [Meta, Tag("model")]
-  public partial class Model {
+  public partial class Model
+  {
     public string? Name { get; init; }
     [Tag("age")]
     public required int Age { get; init; }
   }
 
   [Meta, Tag("child")]
-  public partial class ChildModel : Model {
+  public partial class ChildModel : Model
+  {
     public string? ChildName { get; init; }
   }
 
   [Fact]
-  public void ComputesPropertyMetadataForDerivedTypes() {
+  public void ComputesPropertyMetadataForDerivedTypes()
+  {
     var props = Types.Graph.GetProperties(typeof(ChildModel)).ToList();
 
     // Props are in alphabetical order for stable & predictable orderings.
@@ -233,7 +254,8 @@ public partial class TypeGraphMemberMetadataTest {
   }
 }
 
-public partial class TypeGraphVersionTest {
+public partial class TypeGraphVersionTest
+{
   [Meta, Id("version_test_model")]
   public abstract partial class Model;
 
@@ -247,13 +269,15 @@ public partial class TypeGraphVersionTest {
   public partial class Model3 : Model;
 
   [Fact]
-  public void GetLatestVersion() {
+  public void GetLatestVersion()
+  {
     Types.Graph.GetLatestVersion("version_test_model").ShouldBe(3);
     Types.Graph.GetLatestVersion("unknown").ShouldBeNull();
   }
 
   [Fact]
-  public void GetIdentifiableTypeByVersion() {
+  public void GetIdentifiableTypeByVersion()
+  {
     Types.Graph.GetIdentifiableType("version_test_model", 1)
       .ShouldBe(typeof(Model1));
     Types.Graph.GetIdentifiableType("version_test_model", 2)
@@ -265,9 +289,11 @@ public partial class TypeGraphVersionTest {
   }
 }
 
-public partial class EmptyMetatypeTest {
+public partial class EmptyMetatypeTest
+{
   [Fact]
-  public void Initializes() {
+  public void Initializes()
+  {
     var metatype = new TypeGraph.EmptyMetatype(typeof(object));
 
     metatype.Type.ShouldBe(typeof(object));

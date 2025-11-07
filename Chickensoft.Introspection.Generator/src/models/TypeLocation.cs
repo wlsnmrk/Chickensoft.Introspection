@@ -14,15 +14,19 @@ using Chickensoft.Introspection.Generator.Utils;
 public sealed record TypeLocation(
   ImmutableArray<string> Namespaces,
   ImmutableArray<TypeReference> ContainingTypes
-) {
+)
+{
   /// <summary>Fully resolved namespace of the type's location.</summary>
   public string Namespace => string.Join(".", Namespaces);
 
   /// <summary>Type prefix, used to generate the fully qualified name.</summary>
-  public string Prefix {
-    get {
+  public string Prefix
+  {
+    get
+    {
       var prefix = FullNameOpen;
-      if (prefix is not "") {
+      if (prefix is not "")
+      {
         prefix += ".";
       }
       return prefix;

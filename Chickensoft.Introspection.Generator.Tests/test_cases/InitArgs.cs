@@ -6,8 +6,10 @@ using Chickensoft.Introspection.Generator.Tests.TestUtils;
 
 
 [Meta, Id("init_args_model")]
-public partial class InitArgsModel {
-  public enum InitArgsEnum {
+public partial class InitArgsModel
+{
+  public enum InitArgsEnum
+  {
     No = -1,
     Undecided = 0,
     Yes = 1,

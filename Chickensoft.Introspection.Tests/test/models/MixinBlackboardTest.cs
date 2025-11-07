@@ -3,9 +3,11 @@ namespace Chickensoft.Introspection.Tests.Models;
 using Shouldly;
 using Xunit;
 
-public class MixinBlackboardTest {
+public class MixinBlackboardTest
+{
   [Fact]
-  public void IsAlwaysEqualToAnything() {
+  public void IsAlwaysEqualToAnything()
+  {
     var blackboard = new MixinBlackboard();
     blackboard.Equals(null!).ShouldBeTrue();
     blackboard!.Equals(new object()).ShouldBeTrue();

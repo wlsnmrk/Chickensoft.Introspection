@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using Chickensoft.Introspection;
 using Chickensoft.Introspection.Generator.Tests.TestUtils;
 
-public struct GenericStruct<T> {
+public struct GenericStruct<T>
+{
   public T Value { get; set; }
 }
 
 [Meta]
-public partial class NullablePropertyTypes {
+public partial class NullablePropertyTypes
+{
   [Tag("name")]
   public string? Name { get; set; }
 
