@@ -4,6 +4,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography;
 using Chickensoft.Introspection.Generator.Utils;
@@ -41,17 +42,21 @@ public sealed record DeclaredType(
   ImmutableArray<DeclaredProperty> Properties,
   ImmutableArray<DeclaredAttribute> Attributes,
   ImmutableArray<string> Mixins
-) {
+)
+{
   private static readonly MD5 _md5 = MD5.Create();
   private const int NAME_PORTION = 25;
   private const int HASH_PORTION = 10;
 
   /// <summary>Output filename (only works for non-generic types).</summary>
-  public string Filename {
-    get {
+  public string Filename
+  {
+    get
+    {
       var name = FullNameOpen.Replace('.', '_');
 
-      if (name.Length <= NAME_PORTION + HASH_PORTION) {
+      if (name.Length <= NAME_PORTION + HASH_PORTION)
+      {
         return name;
       }
 
@@ -120,9 +125,12 @@ public sealed record DeclaredType(
   /// tagged with the optional [Id] attribute, which allows a custom version
   /// number to be given as the type's version.
   /// </summary>
-  public int Version {
-    get {
-      if (Kind == DeclaredTypeKind.AbstractType) {
+  public int Version
+  {
+    get
+    {
+      if (Kind == DeclaredTypeKind.AbstractType)
+      {
         // Abstract types don't have versions.
         return -1;
       }
@@ -146,13 +154,15 @@ public sealed record DeclaredType(
   public IEnumerable<DeclaredType> ValidateTypeAndContainingTypes(
     IDictionary<string, DeclaredType> allTypes,
     Func<DeclaredType, bool> predicate
-  ) {
+  )
+  {
     // Have to reconstruct the full names of the containing types from our
     // type reference and location information.
     var fullName = Location.Namespace;
     var containingTypeFullNames = new Dictionary<TypeReference, string>();
 
-    foreach (var containingType in Location.ContainingTypes) {
+    foreach (var containingType in Location.ContainingTypes)
+    {
       fullName +=
         (fullName.Length == 0 ? "" : ".") +
         containingType.SimpleNameOpen;
@@ -184,7 +194,8 @@ public sealed record DeclaredType(
   private DeclaredAttribute? VersionAttribute => Attributes
       .FirstOrDefault((attr) => attr.Name == Constants.VERSION_ATTRIBUTE_NAME);
 
-  internal enum DeclaredTypeState {
+  internal enum DeclaredTypeState
+  {
     Unsupported,
     Type,
     ConcreteType,
@@ -194,26 +205,32 @@ public sealed record DeclaredType(
     ConcreteIdentifiableType
   }
 
-  internal DeclaredTypeState GetState(bool knownToBeAccessibleFromGlobalScope) {
-    if (Kind is DeclaredTypeKind.Interface or DeclaredTypeKind.StaticClass) {
+  internal DeclaredTypeState GetState(bool knownToBeAccessibleFromGlobalScope)
+  {
+    if (Kind is DeclaredTypeKind.Interface or DeclaredTypeKind.StaticClass)
+    {
       // Can't generate metadata about interfaces or static classes.
       return DeclaredTypeState.Unsupported;
     }
 
-    if (!knownToBeAccessibleFromGlobalScope) {
+    if (!knownToBeAccessibleFromGlobalScope)
+    {
       // Can't generate metadata about types that aren't visible from the
       // global scope.
       return DeclaredTypeState.Unsupported;
     }
 
-    if (IsGeneric) {
+    if (IsGeneric)
+    {
       // Can't construct generic types because we wouldn't know the type
       // parameters to use.
       return DeclaredTypeState.Type;
     }
 
-    if (HasIntrospectiveAttribute) {
-      if (HasIdAttribute) {
+    if (HasIntrospectiveAttribute)
+    {
+      if (HasIdAttribute)
+      {
         return Kind is DeclaredTypeKind.ConcreteType
           ? DeclaredTypeState.ConcreteIdentifiableType
           : DeclaredTypeState.AbstractIdentifiableType;
@@ -246,21 +263,28 @@ public sealed record DeclaredType(
     Kind: PickDeclaredTypeKind(Kind, declaredType.Kind),
     IsStatic: PickIsStatic(declaredType.IsStatic),
     IsPublicOrInternal: PickIsPublicOrInternal(declaredType.IsPublicOrInternal),
-    Properties
+    [.. Properties
       .ToImmutableHashSet()
-      .Union(declaredType.Properties)
-      .ToImmutableArray(),
-    Attributes.Concat(declaredType.Attributes).ToImmutableArray(),
-    Mixins.Concat(declaredType.Mixins).ToImmutableArray()
+      .Union(declaredType.Properties)],
+    [.. Attributes, .. declaredType.Attributes],
+    [.. Mixins, .. declaredType.Mixins]
   );
 
   internal Location PickSyntaxLocation(Location other) =>
     HasIntrospectiveAttribute ? SyntaxLocation : other;
 
+  [
+    SuppressMessage(
+      "Style",
+      "IDE0072",
+      Justification = "Missing cases caught by default"
+    )
+  ]
   internal static DeclaredTypeKind PickDeclaredTypeKind(
     DeclaredTypeKind kind,
     DeclaredTypeKind other
-  ) => kind switch {
+  ) => kind switch
+  {
     // both are the same — no change
     _ when other == kind => kind,
 
@@ -290,7 +314,8 @@ public sealed record DeclaredType(
   public bool WriteMetadata(
     IndentedTextWriter writer,
     bool knownToBeAccessibleFromGlobalScope
-  ) {
+  )
+  {
     const string prefix = "Chickensoft.Introspection";
     var name = $"\"{Reference.SimpleNameClosed}\"";
     var genericTypeGetter = $"static (r) => r.Receive<{FullNameClosed}>()";
@@ -300,7 +325,8 @@ public sealed record DeclaredType(
     var id = Id ?? "";
     var version = $"{Version}";
 
-    switch (GetState(knownToBeAccessibleFromGlobalScope)) {
+    switch (GetState(knownToBeAccessibleFromGlobalScope))
+    {
       case DeclaredTypeState.Type:
         writer.Write($"new {prefix}.TypeMetadata({name})");
         return true;
@@ -345,11 +371,13 @@ public sealed record DeclaredType(
   public void WriteMetatype(
     IndentedTextWriter writer,
     IEnumerable<DeclaredType> baseTypes
-  ) {
+  )
+  {
     var isValueType = Reference.Construction is
       Construction.RecordStruct or Construction.Struct;
 
-    if (!string.IsNullOrEmpty(Location.Namespace)) {
+    if (!string.IsNullOrEmpty(Location.Namespace))
+    {
       writer.WriteLine($"namespace {Location.Namespace};\n");
     }
 
@@ -361,14 +389,17 @@ public sealed record DeclaredType(
       .ThenBy(u => u.IsAlias)
       .Select(@using => @using.CodeString).ToList();
 
-    foreach (var usingDirective in usings) {
+    foreach (var usingDirective in usings)
+    {
       writer.WriteLine(usingDirective);
     }
 
-    if (usings.Count > 0) { writer.WriteLine(); }
+    if (usings.Count > 0)
+    { writer.WriteLine(); }
 
     // Nest our metatype inside all the containing types
-    foreach (var containingType in Location.ContainingTypes) {
+    foreach (var containingType in Location.ContainingTypes)
+    {
       writer.WriteLine($"{containingType.CodeString} {{");
       writer.Indent++;
     }
@@ -400,7 +431,8 @@ public sealed record DeclaredType(
     );
     writer.Indent++;
 
-    if (!isValueType) {
+    if (!isValueType)
+    {
       // Add a mixin state bucket to the type itself.
       writer.WriteLine($"[{Constants.EXCLUDE_COVERAGE}]");
       writer.WriteLine(
@@ -537,7 +569,8 @@ public sealed record DeclaredType(
     );
     writer.Indent++;
 
-    if (Kind is not DeclaredTypeKind.ConcreteType) {
+    if (Kind is not DeclaredTypeKind.ConcreteType)
+    {
       // Skip constructor implementation for non-concrete types.
       writer.WriteLine(
         "throw new System.NotImplementedException(" +
@@ -548,8 +581,10 @@ public sealed record DeclaredType(
       goto CLOSE_CONSTRUCT_METHOD; /* yay! a goto! */
     }
 
-    if (initProperties.Length == 0) {
-      if (Kind is DeclaredTypeKind.ConcreteType) {
+    if (initProperties.Length == 0)
+    {
+      if (Kind is DeclaredTypeKind.ConcreteType)
+      {
         writer.WriteLine($"return new {Reference.SimpleNameClosed}();");
       }
 
@@ -566,7 +601,8 @@ public sealed record DeclaredType(
     var propStrings = allProperties
       .Where(prop => prop.IsInit || prop.IsRequired)
       .Select(
-        (prop) => {
+        (prop) =>
+        {
           var bang = prop.TypeNode.IsNullable ? "" : "!";
           return
             $"{prop.Name} = args.ContainsKey(\"{prop.Name}\") " +
@@ -605,7 +641,8 @@ public sealed record DeclaredType(
     writer.Indent--; // close metatype contents
 
     // Close nested types
-    for (var i = writer.Indent; i >= 0; i--) {
+    for (var i = writer.Indent; i >= 0; i--)
+    {
       writer.WriteLine("}");
       writer.Indent--;
     }

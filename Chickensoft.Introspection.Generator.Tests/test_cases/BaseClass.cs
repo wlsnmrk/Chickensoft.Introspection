@@ -1,29 +1,34 @@
-global using System.Xml;
-
-namespace BaseClasses.A {
+namespace BaseClasses.A
+{
   using Chickensoft.Introspection;
 
 
   [Meta]
-  public partial class BaseClass {
+  public partial class BaseClass
+  {
     public required string Name { get; init; }
   }
 }
 
-namespace BaseClasses.A.B.DeeplyNamespaced {
+namespace BaseClasses.A.B.DeeplyNamespaced
+{
   using Chickensoft.Introspection;
 
-  public partial class Container {
-    public partial class Container2 {
+  public partial class Container
+  {
+    public partial class Container2
+    {
       [Meta]
-      public partial class DeeplyNestedBaseClass {
+      public partial class DeeplyNestedBaseClass
+      {
         public required string DeepName { get; init; }
       }
     }
   }
 }
 
-namespace BaseClasses.B {
+namespace BaseClasses.B
+{
   using BaseClasses.A;
   using Chickensoft.Introspection;
 
@@ -31,7 +36,8 @@ namespace BaseClasses.B {
   public partial class Child : BaseClass { }
 }
 
-namespace BaseClasses.A.B.UsingDeeplyNamespaced {
+namespace BaseClasses.A.B.UsingDeeplyNamespaced
+{
   using BaseClasses.A.B.DeeplyNamespaced;
   using Chickensoft.Introspection;
 
@@ -42,14 +48,18 @@ namespace BaseClasses.A.B.UsingDeeplyNamespaced {
   public partial class SomeChild :
     OtherNamespace.Altogether.A.B.C.D.SomeBaseClass;
 
-  public partial class Group1 {
-    public partial class Group2 {
+  public partial class Group1
+  {
+    public partial class Group2
+    {
       public partial class Child : Container.Container2.DeeplyNestedBaseClass { }
     }
   }
 }
 
-namespace AlternativeNamespace {
+namespace AlternativeNamespace
+{
+  using System.Diagnostics.CodeAnalysis;
   using Chickensoft.Introspection;
   using OtherNamespace.Altogether;
 
@@ -57,33 +67,56 @@ namespace AlternativeNamespace {
   public partial class ChildBaseNotFullyQualified : A.B.C.D.SomeBaseClass { }
 
   [Meta]
+  [
+    SuppressMessage(
+      "Style",
+      "IDE0001",
+      Justification = "Fully qualified name behavior under test"
+    )
+  ]
   public partial class ChildBaseFullyQualified :
-    OtherNamespace.Altogether.A.B.C.D.SomeBaseClass { }
+    OtherNamespace.Altogether.A.B.C.D.SomeBaseClass
+  { }
 
 }
 
-namespace OtherNamespace.Altogether {
+namespace OtherNamespace.Altogether
+{
+  using System.Diagnostics.CodeAnalysis;
   using Chickensoft.Introspection;
 
   [Meta]
+  [
+    SuppressMessage(
+      "Style",
+      "IDE0001",
+      Justification = "Fully qualified name behavior under test"
+    )
+  ]
   public partial class ChildBaseFullyQualified :
-    OtherNamespace.Altogether.A.B.C.D.SomeBaseClass { }
+    OtherNamespace.Altogether.A.B.C.D.SomeBaseClass
+  { }
 
   [Meta]
   public partial class ChildBaseFullyQualified2 : A.B.C.D.SomeBaseClass { }
 
-  public partial class A {
+  public partial class A
+  {
     [Meta]
     public partial class ChildBaseFullyQualified : B.C.D.SomeBaseClass { }
-    public partial class B {
+    public partial class B
+    {
       [Meta]
       public partial class ChildBaseFullyQualified : C.D.SomeBaseClass { }
-      public partial class C {
+      public partial class C
+      {
         [Meta]
         public partial class ChildBaseFullyQualified : D.SomeBaseClass { }
-        public partial class D {
+        public partial class D
+        {
           [Meta]
-          public partial class SomeBaseClass {
+          public partial class SomeBaseClass
+          {
             public required string Identifier { get; init; }
           }
         }
@@ -92,8 +125,11 @@ namespace OtherNamespace.Altogether {
   }
 }
 
-namespace AliasedStuff {
-  namespace Nested {
+namespace AliasedStuff
+{
+  namespace Nested
+  {
+    using System.Diagnostics.CodeAnalysis;
     using Chickensoft.Introspection;
     using X = OtherNamespace.Altogether.A;
     using Y = OtherNamespace.Altogether.A.B;
@@ -102,6 +138,13 @@ namespace AliasedStuff {
     public partial class DirectChild : X { }
 
     [Meta]
+    [
+      SuppressMessage(
+        "Style",
+        "IDE0001",
+        Justification = "Fully qualified name behavior under test"
+      )
+    ]
     public partial class Child : X.B.C.D.SomeBaseClass { }
 
     [Meta]
@@ -113,7 +156,8 @@ namespace AliasedStuff {
 }
 
 
-namespace StaticUsings {
+namespace StaticUsings
+{
   using Chickensoft.Introspection;
   using static OtherNamespace.Altogether.A;
 
@@ -122,8 +166,10 @@ namespace StaticUsings {
 }
 
 
-namespace One {
-  namespace Two {
+namespace One
+{
+  namespace Two
+  {
     using Chickensoft.Introspection;
 
     [Meta]

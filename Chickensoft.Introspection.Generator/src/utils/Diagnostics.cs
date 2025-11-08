@@ -5,7 +5,8 @@ using System.Linq;
 using Chickensoft.Introspection.Generator.Models;
 using Microsoft.CodeAnalysis;
 
-public static class Diagnostics {
+public static class Diagnostics
+{
   public const string ERR_PREFIX = "INTROSPECTION";
   public const string ERR_CATEGORY = "Chickensoft.Introspection.Generator";
 

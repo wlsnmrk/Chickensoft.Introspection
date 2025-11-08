@@ -7,7 +7,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Shouldly;
 using Xunit;
 
-public class TypeGeneratorTest {
+public class TypeGeneratorTest
+{
 
   [Fact]
   public void GetConstruction() =>
@@ -16,7 +17,8 @@ public class TypeGeneratorTest {
     ).ShouldBe(Construction.Struct);
 
   [Fact]
-  public void PropertiesWithoutAccessorList() {
+  public void PropertiesWithoutAccessorList()
+  {
     var code = """
     [Meta]
     public partial class MyType {
@@ -26,7 +28,7 @@ public class TypeGeneratorTest {
 
     var tree = CSharpSyntaxTree.ParseText(code);
 
-    var typeDeclaration = tree
+    _ = tree
       .GetRoot()
       .DescendantNodes()
       .OfType<ClassDeclarationSyntax>()

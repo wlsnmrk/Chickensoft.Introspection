@@ -1,6 +1,7 @@
 namespace Chickensoft.Introspection.Generator;
 
-public static class Constants {
+public static class Constants
+{
   public const string INTROSPECTIVE_ATTRIBUTE_NAME = "Meta";
   public const string MIXIN_ATTRIBUTE_NAME = "Mixin";
   public const string ID_ATTRIBUTE_NAME = "Id";

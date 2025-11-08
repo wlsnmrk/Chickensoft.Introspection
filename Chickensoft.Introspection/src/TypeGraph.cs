@@ -7,7 +7,8 @@ using System.Data;
 using System.Linq;
 using Chickensoft.Collections;
 
-internal class TypeGraph : ITypeGraph {
+internal class TypeGraph : ITypeGraph
+{
   #region Caches
   private readonly ConcurrentDictionary<Type, ITypeMetadata> _types = new();
   private readonly ConcurrentDictionary<string, Dictionary<int, Type>>
@@ -30,7 +31,8 @@ internal class TypeGraph : ITypeGraph {
     new Dictionary<Type, Attribute[]>();
   #endregion Caches
 
-  internal void Reset() {
+  internal void Reset()
+  {
     _types.Clear();
     _identifiableTypesByIdAndVersion.Clear();
     _identifiableLatestVersionsById.Clear();
@@ -45,7 +47,8 @@ internal class TypeGraph : ITypeGraph {
     .Values
     .SelectMany(versions => versions.Values);
 
-  public void Register(ITypeRegistry registry) {
+  public void Register(ITypeRegistry registry)
+  {
     RegisterTypes(registry);
     PromoteInheritedIdentifiableTypes(registry);
     ComputeTypesByBaseType(registry);
@@ -73,20 +76,24 @@ internal class TypeGraph : ITypeGraph {
       ? subtypes
       : _emptyTypeSet;
 
-  public IReadOnlySet<Type> GetDescendantSubtypes(Type type) {
+  public IReadOnlySet<Type> GetDescendantSubtypes(Type type)
+  {
     CacheDescendants(type);
     return _typesByAncestor[type];
   }
 
-  public IEnumerable<PropertyMetadata> GetProperties(Type type) {
+  public IEnumerable<PropertyMetadata> GetProperties(Type type)
+  {
     if (
       !_types.ContainsKey(type) ||
       _types[type] is not IIntrospectiveTypeMetadata metadata
-    ) {
+    )
+    {
       return [];
     }
 
-    if (!_properties.TryGetValue(type, out var properties)) {
+    if (!_properties.TryGetValue(type, out var properties))
+    {
       // Cache the properties for a type so we never have to do this again.
       _properties[type] =
         GetTypeAndBaseTypes(type)
@@ -107,15 +114,18 @@ internal class TypeGraph : ITypeGraph {
       ? attribute
       : null;
 
-  public IReadOnlyDictionary<Type, Attribute[]> GetAttributes(Type type) {
+  public IReadOnlyDictionary<Type, Attribute[]> GetAttributes(Type type)
+  {
     if (
       !_types.ContainsKey(type) ||
       _types[type] is not IIntrospectiveTypeMetadata metadata
-    ) {
+    )
+    {
       return _emptyAttributes;
     }
 
-    if (!_attributes.TryGetValue(type, out var attributes)) {
+    if (!_attributes.TryGetValue(type, out var attributes))
+    {
       // Cache the attributes for a type so we never have to do this again.
       _attributes[type] = GetTypeAndBaseTypes(type)
         .Select(type => _types[type])
@@ -157,24 +167,30 @@ internal class TypeGraph : ITypeGraph {
   #endregion ITypeGraph
 
   #region Private Utilities
-  private void CacheDescendants(Type type) {
-    if (_typesByAncestor.ContainsKey(type)) {
+  private void CacheDescendants(Type type)
+  {
+    if (_typesByAncestor.ContainsKey(type))
+    {
       return;
     }
     _typesByAncestor[type] = FindDescendants(type);
   }
 
-  private Set<Type> FindDescendants(Type type) {
+  private Set<Type> FindDescendants(Type type)
+  {
     var descendants = new Set<Type>();
     var queue = new Queue<Type>();
     queue.Enqueue(type);
 
-    while (queue.Count > 0) {
+    while (queue.Count > 0)
+    {
       var currentType = queue.Dequeue();
       descendants.Add(currentType);
 
-      if (_typesByBaseType.TryGetValue(currentType, out var children)) {
-        foreach (var child in children) {
+      if (_typesByBaseType.TryGetValue(currentType, out var children))
+      {
+        foreach (var child in children)
+        {
           queue.Enqueue(child);
         }
       }
@@ -185,38 +201,45 @@ internal class TypeGraph : ITypeGraph {
     return descendants;
   }
 
-  private void RegisterTypes(ITypeRegistry registry) {
+  private void RegisterTypes(ITypeRegistry registry)
+  {
     // Iterate through all visible types in O(n) time and add them to our
     // internal caches.
     // Why do this? We want to allow multiple assemblies to use this system to
     // find types by their base type or ancestor.
-    foreach (var type in registry.VisibleTypes.Keys) {
+    foreach (var type in registry.VisibleTypes.Keys)
+    {
       RegisterType(type, registry.VisibleTypes[type]);
     }
   }
 
   private void RegisterType(
     Type @type, ITypeMetadata metadata, bool overwrite = false
-  ) {
+  )
+  {
     // Cache types by system type.
     _types[type] = metadata;
 
     if (
       metadata is IIdentifiableTypeMetadata identifiableTypeMetadata
-    ) {
+    )
+    {
 
       // Track types by both id and version.
       if (
         metadata is IConcreteIntrospectiveTypeMetadata introspectiveMetadata
-      ) {
+      )
+      {
         var id = identifiableTypeMetadata.Id;
         var version = introspectiveMetadata.Version;
         // Only concrete types are allowed to be versioned.
 
-        if (_identifiableTypesByIdAndVersion.TryGetValue(id, out var versions)) {
+        if (_identifiableTypesByIdAndVersion.TryGetValue(id, out var versions))
+        {
           // Validate that we're not overwriting an existing type if we're not
           // allowed to.
-          if (!overwrite && versions.TryGetValue(version, out var existingType)) {
+          if (!overwrite && versions.TryGetValue(version, out var existingType))
+          {
             throw new DuplicateNameException(
               $"Cannot register introspective type `{type}` with id `{id}` " +
               $"and version `{version}`. A different type with the same id " +
@@ -224,7 +247,8 @@ internal class TypeGraph : ITypeGraph {
             );
           }
         }
-        else {
+        else
+        {
           versions = [];
           _identifiableTypesByIdAndVersion[id] = versions;
         }
@@ -237,33 +261,40 @@ internal class TypeGraph : ITypeGraph {
           _identifiableLatestVersionsById.TryGetValue(
             id, out var existingVersion
           )
-        ) {
-          if (version > existingVersion) {
+        )
+        {
+          if (version > existingVersion)
+          {
             _identifiableLatestVersionsById[id] = version;
           }
         }
-        else {
+        else
+        {
           _identifiableLatestVersionsById[id] = version;
         }
       }
     }
   }
 
-  private void PromoteInheritedIdentifiableTypes(ITypeRegistry registry) {
+  private void PromoteInheritedIdentifiableTypes(ITypeRegistry registry)
+  {
     // Some introspective types may not be known to be identifiable at
     // compile-time since base types cannot be examined without looking at
     // analyzer symbol data, which is slow. So, we look at them at runtime and
     // promote them to identifiable types right after registration.
 
-    foreach (var visibleType in registry.VisibleTypes.Keys) {
+    foreach (var visibleType in registry.VisibleTypes.Keys)
+    {
       var metadata = registry.VisibleTypes[visibleType];
 
-      if (metadata is IIdentifiableTypeMetadata) {
+      if (metadata is IIdentifiableTypeMetadata)
+      {
         // Already identifiable
         continue;
       }
 
-      if (metadata is not IntrospectiveTypeMetadata introspectiveMetadata) {
+      if (metadata is not IntrospectiveTypeMetadata introspectiveMetadata)
+      {
         // Only promote concrete introspective types
         continue;
       }
@@ -271,10 +302,12 @@ internal class TypeGraph : ITypeGraph {
       var version = introspectiveMetadata.Version;
 
       // Only iterate through base types.
-      foreach (var type in GetTypeAndBaseTypes(visibleType).Skip(1)) {
+      foreach (var type in GetTypeAndBaseTypes(visibleType).Skip(1))
+      {
         metadata = _types[type];
 
-        if (metadata is not IIdentifiableTypeMetadata idMetadata) {
+        if (metadata is not IIdentifiableTypeMetadata idMetadata)
+        {
           continue;
         }
 
@@ -299,23 +332,28 @@ internal class TypeGraph : ITypeGraph {
     }
   }
 
-  private void ComputeTypesByBaseType(ITypeRegistry registry) {
+  private void ComputeTypesByBaseType(ITypeRegistry registry)
+  {
     // Iterate through each type in the registry and its base types,
     // constructing a flat map of base types to their immediately derived types.
     // The beauty of this approach is that it discovers base types which may be
     // in other modules, and works in reflection-free mode since BaseType is
     // always supported by every C# environment, even AOT environments.
-    foreach (var type in registry.VisibleTypes.Keys) {
+    foreach (var type in registry.VisibleTypes.Keys)
+    {
       var lastType = type;
       var baseType = type.BaseType;
 
       // As far as we know, any type could be a base type.
-      if (!_typesByBaseType.ContainsKey(type)) {
+      if (!_typesByBaseType.ContainsKey(type))
+      {
         _typesByBaseType[type] = [];
       }
 
-      while (baseType != null) {
-        if (!_typesByBaseType.TryGetValue(baseType, out var existingSet)) {
+      while (baseType != null)
+      {
+        if (!_typesByBaseType.TryGetValue(baseType, out var existingSet))
+        {
           existingSet = [];
           _typesByBaseType[baseType] = existingSet;
         }
@@ -335,14 +373,17 @@ internal class TypeGraph : ITypeGraph {
   /// <returns>The type's metatype (if it has one), and any metatypes that
   /// describe its base types, in the order of the most derived type to the
   /// least derived type.</returns>
-  private IEnumerable<Type> GetTypeAndBaseTypes(Type type) {
+  private IEnumerable<Type> GetTypeAndBaseTypes(Type type)
+  {
     var currentType = type;
 
-    do {
+    do
+    {
       if (
         _types.ContainsKey(currentType) &&
         _types[currentType] is IIntrospectiveTypeMetadata
-      ) {
+      )
+      {
         yield return currentType;
       }
 
@@ -350,7 +391,8 @@ internal class TypeGraph : ITypeGraph {
     } while (currentType != null);
   }
 
-  internal class EmptyMetatype(Type type) : IMetatype {
+  internal class EmptyMetatype(Type type) : IMetatype
+  {
     private static readonly List<PropertyMetadata> _properties = [];
     private static readonly Dictionary<Type, Attribute[]> _attributes = [];
     private static readonly List<Type> _mixins = [];

@@ -3,9 +3,11 @@ namespace Chickensoft.Introspection.Tests.Models;
 using Shouldly;
 using Xunit;
 
-public class PropertyMetadataTest {
+public class PropertyMetadataTest
+{
   [Fact]
-  public void Initializes() {
+  public void Initializes()
+  {
     var property = new PropertyMetadata(
       Name: "Name",
       IsInit: false,

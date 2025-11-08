@@ -13,8 +13,10 @@ public class JunkAttribute : Attribute;
 [Meta, Id("my_type")]
 [Junk]
 [Junk]
-public partial class MyType {
-  public StringBuilder MakeStringBuilder() {
+public partial class MyType
+{
+  public StringBuilder MakeStringBuilder()
+  {
     WriteLine("Making a string builder.");
     JSON.JsonSerializer.Serialize(new { Message = "Hello, world!" });
     return new StringBuilder();
@@ -38,12 +40,17 @@ public partial class MyType {
 
 public partial class MyType<T>;
 
-public static partial class One {
-  internal partial record struct Two {
-    public partial interface IThree {
-      public sealed partial record Four {
+public static partial class One
+{
+  internal partial record struct Two
+  {
+    public partial interface IThree
+    {
+      public sealed partial record Four
+      {
         [Meta, Id("nested_type")]
-        public sealed partial class NestedType {
+        public sealed partial class NestedType
+        {
           [Junk]
           [Junk]
           [Tag("my_property")]

@@ -5,9 +5,11 @@ using Chickensoft.Introspection.Generator.Tests.TestCases;
 using Shouldly;
 using Xunit;
 
-public class BaseTypeTest {
+public class BaseTypeTest
+{
   [Fact]
-  public void GetsInheritedProperties() {
+  public void GetsInheritedProperties()
+  {
     var props = Types.Graph.GetProperties(typeof(DerivedModel));
 
     props

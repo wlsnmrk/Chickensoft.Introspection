@@ -10,7 +10,8 @@ using Chickensoft.Collections;
 /// reference types that are visible from the global scope of the assembly that
 /// registered the types are represented in the graph, including nested types.
 /// </summary>
-public interface ITypeGraph {
+public interface ITypeGraph
+{
   /// <summary>
   /// Enumerable of all registered (or promoted) identifiable types.
   /// </summary>

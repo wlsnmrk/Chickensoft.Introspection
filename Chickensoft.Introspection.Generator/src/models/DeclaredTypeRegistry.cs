@@ -5,7 +5,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using Chickensoft.Introspection.Generator.Utils;
 
-public class DeclaredTypeRegistry {
+public class DeclaredTypeRegistry
+{
   public ImmutableArray<UsingDirective> GlobalUsings { get; init; }
   public ScopeTree ScopeTree { get; init; }
   public ImmutableDictionary<string, DeclaredType> AllTypes { get; init; }
@@ -16,7 +17,8 @@ public class DeclaredTypeRegistry {
     ScopeTree scopeTree,
     ImmutableDictionary<string, DeclaredType> allTypes,
     ImmutableHashSet<DeclaredType> visibleTypes
-  ) {
+  )
+  {
     GlobalUsings = globalUsings;
     ScopeTree = scopeTree;
     AllTypes = allTypes;
@@ -33,7 +35,8 @@ public class DeclaredTypeRegistry {
     AllTypes.SequenceEqual(data.AllTypes) &&
     VisibleTypes.SequenceEqual(data.VisibleTypes);
 
-  public void Write(IndentedTextWriter writer) {
+  public void Write(IndentedTextWriter writer)
+  {
     writer.WriteLine(
       "public partial class TypeRegistry : " +
       $"{Constants.TYPE_REGISTRY_INTERFACE} {{"
@@ -64,7 +67,8 @@ public class DeclaredTypeRegistry {
             DeclaredTypeKind.ConcreteType
           )
         .OrderBy(type => type.FullNameOpen), // Sort for deterministic output.
-      (type) => {
+      (type) =>
+      {
         var knownToBeAccessibleFromGlobalScope = VisibleTypes.Contains(type);
         writer.Write($"[typeof({type.FullNameOpen})] = ");
         type.WriteMetadata(writer, knownToBeAccessibleFromGlobalScope);

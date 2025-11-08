@@ -6,7 +6,8 @@ using Chickensoft.Collections;
 /// Represents a simple table of data that can be used to store a single
 /// object instance by its type.
 /// </summary>
-public class MixinBlackboard : Blackboard {
+public class MixinBlackboard : Blackboard
+{
   /// <inheritdoc />
   // Equal to everything to avoid being a factor when a child of a record type.
   public override bool Equals(object obj) => true;

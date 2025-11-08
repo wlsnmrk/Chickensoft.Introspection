@@ -5,9 +5,11 @@ using Chickensoft.GeneratorTester;
 using Shouldly;
 using Xunit;
 
-public class IntrospectionGeneratorTest {
+public class IntrospectionGeneratorTest
+{
   [Fact]
-  public void GeneratesUml() {
+  public void GeneratesUml()
+  {
     // Run the test cases through the generator. If the project builds and
     // allows this to run, we've already passed a considerable barrier of
     // testing. Fully unit testing generators makes them brittle to maintain,
@@ -17,7 +19,8 @@ public class IntrospectionGeneratorTest {
     // which helps us identify missing test cases or unused code.
     foreach (
       var file in Directory.GetFiles(Tester.CurrentDir("../test_cases"), "*.cs")
-    ) {
+    )
+    {
       var contents = File.ReadAllText(file);
 
       new TypeGenerator().Generate(contents);
@@ -27,7 +30,8 @@ public class IntrospectionGeneratorTest {
   // Have to test error diagnostics in unit tests since it would not build.
 
   [Fact]
-  public void NotFullyPartialError() {
+  public void NotFullyPartialError()
+  {
     var contents = """
     namespace Chickensoft.Introspection.Generator.Tests.TestCases;
 
@@ -43,7 +47,8 @@ public class IntrospectionGeneratorTest {
   }
 
   [Fact]
-  public void TypeDoesNotHaveUniqueIdError() {
+  public void TypeDoesNotHaveUniqueIdError()
+  {
     var contents = """
     namespace Chickensoft.Introspection.Generator.Tests.TestCases;
 

@@ -5,7 +5,8 @@ using System;
 /// <summary>
 /// Metadata about a type that is visible from the top-level namespace.
 /// </summary>
-public interface ITypeMetadata {
+public interface ITypeMetadata
+{
   /// <summary>
   /// Simple name of the type. If the type is generic, this will also include
   /// the open generics.
@@ -16,7 +17,8 @@ public interface ITypeMetadata {
 /// <summary>
 /// Metadata about a type that is not a non-generic or closed generic type.
 /// </summary>
-public interface IClosedTypeMetadata : ITypeMetadata {
+public interface IClosedTypeMetadata : ITypeMetadata
+{
   /// <summary>
   /// Function which receives a type receiver and calls the
   /// <see cref="ITypeReceiver.Receive{T}" /> method with the generic type.
@@ -27,7 +29,8 @@ public interface IClosedTypeMetadata : ITypeMetadata {
 /// <summary>
 /// Metadata about a concrete (instantiable) type.
 /// </summary>
-public interface IConcreteTypeMetadata : IClosedTypeMetadata {
+public interface IConcreteTypeMetadata : IClosedTypeMetadata
+{
   /// <summary>Function which returns a new instance of the type.</summary>
   Func<object> Factory { get; }
 }
@@ -35,7 +38,8 @@ public interface IConcreteTypeMetadata : IClosedTypeMetadata {
 /// <summary>
 /// Metadata about an introspective type.
 /// </summary>
-public interface IIntrospectiveTypeMetadata : IClosedTypeMetadata {
+public interface IIntrospectiveTypeMetadata : IClosedTypeMetadata
+{
   /// <summary>
   /// Metatype description of the introspective type which includes
   /// information about the type, its properties, attributes applied to it,
@@ -48,7 +52,8 @@ public interface IIntrospectiveTypeMetadata : IClosedTypeMetadata {
 /// Metadata about a concrete introspective type.
 /// </summary>
 public interface IConcreteIntrospectiveTypeMetadata :
-IIntrospectiveTypeMetadata, IConcreteTypeMetadata {
+IIntrospectiveTypeMetadata, IConcreteTypeMetadata
+{
   /// <summary>
   /// Introspective type version as specified by the
   /// <see cref="VersionAttribute" />, if any.
@@ -59,7 +64,8 @@ IIntrospectiveTypeMetadata, IConcreteTypeMetadata {
 /// <summary>
 /// Metadata about an identifiable introspective type.
 /// </summary>
-public interface IIdentifiableTypeMetadata : IIntrospectiveTypeMetadata {
+public interface IIdentifiableTypeMetadata : IIntrospectiveTypeMetadata
+{
   /// <summary>
   /// Introspective type identifier as specified by the
   /// <see cref="IdAttribute" />, if any.

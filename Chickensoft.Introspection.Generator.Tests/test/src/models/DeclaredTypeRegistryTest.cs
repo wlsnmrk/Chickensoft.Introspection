@@ -6,16 +6,16 @@ using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class DeclaredTypeRegistryTest {
+public class DeclaredTypeRegistryTest
+{
   [Fact]
-  public void Equality() {
+  public void Equality()
+  {
     var registry = new DeclaredTypeRegistry(
-      globalUsings: ImmutableArray<UsingDirective>.Empty,
-      scopeTree: new ScopeTree(
-        [], new Dictionary<string, DeclaredType>()
-      ),
+      globalUsings: [],
+      scopeTree: new ScopeTree([], new Dictionary<string, DeclaredType>()),
       allTypes: ImmutableDictionary<string, DeclaredType>.Empty,
-      visibleTypes: ImmutableHashSet<DeclaredType>.Empty
+      visibleTypes: []
     );
 
     registry.GetHashCode().ShouldBeOfType<int>();
@@ -24,52 +24,51 @@ public class DeclaredTypeRegistryTest {
 
     registry.ShouldBe(
       new DeclaredTypeRegistry(
-        globalUsings: ImmutableArray<UsingDirective>.Empty,
+        globalUsings: [],
         scopeTree: new ScopeTree(
           [], new Dictionary<string, DeclaredType>()
         ),
         allTypes: ImmutableDictionary<string, DeclaredType>.Empty,
-        visibleTypes: ImmutableHashSet<DeclaredType>.Empty
+        visibleTypes: []
       )
     );
 
     new DeclaredTypeRegistry(
-      globalUsings: ImmutableArray<UsingDirective>.Empty,
-      scopeTree: new ScopeTree(
-        [], new Dictionary<string, DeclaredType>()
-      ),
+      globalUsings: [],
+      scopeTree: new ScopeTree([], new Dictionary<string, DeclaredType>()),
       allTypes: ImmutableDictionary<string, DeclaredType>.Empty,
-      visibleTypes: ImmutableHashSet<DeclaredType>.Empty
+      visibleTypes: []
     ).ShouldNotBe(
       new DeclaredTypeRegistry(
-        globalUsings: ImmutableArray<UsingDirective>.Empty,
+        globalUsings: [],
         scopeTree: new ScopeTree(
           [], new Dictionary<string, DeclaredType>()
         ),
         allTypes: ImmutableDictionary<string, DeclaredType>.Empty,
-        visibleTypes: new DeclaredType[] {
+        visibleTypes:
+        [
           new(
             Reference: new TypeReference(
               "a",
               Construction: Construction.Class,
               IsPartial: false,
-              TypeParameters: ImmutableArray<string>.Empty
+              TypeParameters: []
             ),
             SyntaxLocation: Microsoft.CodeAnalysis.Location.None,
             Location: new TypeLocation(
-              Namespaces: ImmutableArray<string>.Empty,
-              ContainingTypes: ImmutableArray<TypeReference>.Empty
+              Namespaces: [],
+              ContainingTypes: []
             ),
             BaseType: null,
-            Usings: ImmutableHashSet<UsingDirective>.Empty,
+            Usings: [],
             Kind: DeclaredTypeKind.ConcreteType,
             IsStatic: false,
             IsPublicOrInternal: true,
-            Properties: ImmutableArray<DeclaredProperty>.Empty,
-            Attributes: ImmutableArray<DeclaredAttribute>.Empty,
-            Mixins: ImmutableArray<string>.Empty
+            Properties: [],
+            Attributes: [],
+            Mixins: []
           )
-        }.ToImmutableHashSet()
+        ]
       )
     );
   }

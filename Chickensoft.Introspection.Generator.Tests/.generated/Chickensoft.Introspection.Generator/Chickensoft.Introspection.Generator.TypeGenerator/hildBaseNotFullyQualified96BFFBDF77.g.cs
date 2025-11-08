@@ -4,6 +4,7 @@ namespace AlternativeNamespace;
 
 using Chickensoft.Introspection;
 using OtherNamespace.Altogether;
+using System.Diagnostics.CodeAnalysis;
 
 partial class ChildBaseNotFullyQualified : Chickensoft.Introspection.IIntrospectiveRef {
   [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]

@@ -11,7 +11,8 @@ using System;
 [AttributeUsage(
   AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false
 )]
-public sealed class MetaAttribute : Attribute {
+public sealed class MetaAttribute : Attribute
+{
 
   /// <summary>
   /// Mixins applied to the type. Mixins are interfaces that extend
@@ -27,7 +28,8 @@ public sealed class MetaAttribute : Attribute {
   /// <inheritdoc cref="MetaAttribute" path="/summary"/>
   /// </summary>
   /// <param name="mixins"><inheritdoc cref="Mixins" path="/summary"/></param>
-  public MetaAttribute(params Type[] mixins) {
+  public MetaAttribute(params Type[] mixins)
+  {
     Mixins = mixins;
   }
 }

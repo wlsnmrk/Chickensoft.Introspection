@@ -5,7 +5,8 @@ namespace Chickensoft.Introspection;
 /// base type or ancestor without reflection, using the LogicBlocks Type
 /// Generator output.
 /// </summary>
-public static class Types {
+public static class Types
+{
   /// <summary>Shared type graph instance.</summary>
   public static ITypeGraph Graph => InternalGraph;
 

@@ -13,7 +13,8 @@ using System;
   AllowMultiple = false,
   Inherited = true
 )]
-public class IdAttribute : Attribute {
+public class IdAttribute : Attribute
+{
   /// <summary>
   /// Unique string identifier for an introspective type. Must be unique across
   /// all introspective types used across every assembly in your project.
@@ -22,7 +23,8 @@ public class IdAttribute : Attribute {
 
   /// <inheritdoc cref="IdAttribute" path="/summary"/>
   /// <param name="id"><inheritdoc cref="Id" path="/summary"/></param>
-  public IdAttribute(string id) {
+  public IdAttribute(string id)
+  {
     Id = id;
   }
 }

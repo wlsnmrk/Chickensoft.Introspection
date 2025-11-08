@@ -1,26 +1,27 @@
 namespace Chickensoft.Introspection.Generator.Tests.Models;
 
 using System;
-using System.Collections.Immutable;
 using Chickensoft.Introspection.Generator.Models;
 using Shouldly;
 using Xunit;
 
-public class TypeReferenceTest {
+public class TypeReferenceTest
+{
   [Fact]
-  public void MergePartialDefinition() {
+  public void MergePartialDefinition()
+  {
     var a = new TypeReference(
       SimpleName: "A",
       Construction: Construction.Class,
       IsPartial: true,
-      TypeParameters: ImmutableArray<string>.Empty
+      TypeParameters: []
     );
 
     var b = new TypeReference(
       SimpleName: "B",
       Construction: Construction.Class,
       IsPartial: false,
-      TypeParameters: ImmutableArray<string>.Empty
+      TypeParameters: []
     );
 
 
@@ -29,17 +30,19 @@ public class TypeReferenceTest {
   }
 
   [Fact]
-  public void GetConstructionCodeString() {
+  public void GetConstructionCodeString()
+  {
     var a = new TypeReference(
       SimpleName: "A",
       Construction: Construction.Struct,
       IsPartial: false,
-      TypeParameters: ImmutableArray<string>.Empty
+      TypeParameters: []
     );
 
     a.CodeString.ShouldBe("struct A");
 
-    var b = a with {
+    var b = a with
+    {
       Construction = (Construction)(-1)
     };
 

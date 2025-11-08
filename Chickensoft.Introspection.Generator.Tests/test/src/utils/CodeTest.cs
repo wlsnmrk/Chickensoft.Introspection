@@ -6,7 +6,8 @@ using Chickensoft.Introspection.Generator.Utils;
 using Shouldly;
 using Xunit;
 
-public class CodeTest {
+public class CodeTest
+{
   [Theory]
   [InlineData("Parent<string>.Child<string>", "Child")]
   [InlineData("nameof(Parent<string>.Child<string>)", "Child")]
@@ -30,7 +31,8 @@ public class CodeTest {
     Code.NameOf(value).ShouldBe(expected);
 
   [Fact]
-  public void NameOfNoSuccess() {
+  public void NameOfNoSuccess()
+  {
     // Make a regex that doesn't match anything
     Code.NameOfRegex = new Regex("nope");
     Code.NameOf("input").ShouldBe("input");
